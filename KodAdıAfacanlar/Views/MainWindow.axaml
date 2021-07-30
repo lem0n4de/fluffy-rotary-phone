@@ -1,0 +1,53 @@
+<Window xmlns="https://github.com/avaloniaui"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:vm="using:KodAdıAfacanlar.ViewModels"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:local="clr-namespace:KodAdıAfacanlar.Views"
+        mc:Ignorable="d" d:DesignWidth="800" d:DesignHeight="450"
+        x:Class="KodAdıAfacanlar.Views.MainWindow"
+        Icon="/Assets/avalonia-logo.ico"
+        Title="KodAdıAfacanlar"
+
+        ExtendClientAreaToDecorationsHint="True"
+        TransparencyLevelHint="AcrylicBlur"
+        Background="Transparent">
+
+    <Design.DataContext>
+        <vm:MainWindowViewModel />
+    </Design.DataContext>
+    <Panel>
+        <ExperimentalAcrylicBorder IsHitTestVisible="False">
+            <ExperimentalAcrylicBorder.Material>
+                <ExperimentalAcrylicMaterial
+                    BackgroundSource="Digger"
+                    TintColor="Black"
+                    TintOpacity="1"
+                    MaterialOpacity="0.65" />
+            </ExperimentalAcrylicBorder.Material>
+        </ExperimentalAcrylicBorder>
+
+        <DockPanel Margin="40">
+            <Button DockPanel.Dock="Bottom"
+                    Command="{Binding FetchLessonsCommand}">
+                <StackPanel Orientation="Horizontal">
+                    <PathIcon Data="{StaticResource arrow_download_regular}" />
+                    <TextBlock Text="Fetch lessons" 
+                               Margin="5 5"
+                               HorizontalAlignment="Center"
+                               VerticalAlignment="Center"/>
+                </StackPanel>
+            </Button>
+            <ProgressBar DockPanel.Dock="Bottom" 
+                         IsIndeterminate="True"
+                         IsVisible="{Binding IsBusy}" />
+            <ItemsControl Items="{Binding Lessons}">
+                <ItemsControl.ItemTemplate>
+                    <DataTemplate>
+                        <TextBlock Text="{Binding Title}"></TextBlock>
+                    </DataTemplate>
+                </ItemsControl.ItemTemplate>
+            </ItemsControl>
+        </DockPanel>
+    </Panel>
+</Window>

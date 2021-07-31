@@ -14,7 +14,6 @@ namespace KodAdıAfacanlar.ViewModels
         {
             FetchLessonsCommand = ReactiveCommand.Create(() =>
             {
-                Lessons = new();
                 var l1 = new Lesson("title 1", "javascriptCode 1", "id 1");
                 var lecture = new Lecture("title 1", "url 1", "teacher 1", "id 1");
                 l1.LectureList.Add(lecture);
@@ -23,7 +22,7 @@ namespace KodAdıAfacanlar.ViewModels
         }
         
         public IReactiveCommand FetchLessonsCommand { get; }
-        public ObservableCollection<Lesson> Lessons { get; set; }
+        public ObservableCollection<Lesson> Lessons { get; set; } = new();
 
         private bool _isBusy;
         public bool IsBusy

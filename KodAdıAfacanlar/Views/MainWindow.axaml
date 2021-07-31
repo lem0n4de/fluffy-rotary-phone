@@ -38,16 +38,16 @@
                                VerticalAlignment="Center"/>
                 </StackPanel>
             </Button>
-            <ProgressBar DockPanel.Dock="Bottom" 
+            <ProgressBar DockPanel.Dock="Bottom"
                          IsIndeterminate="True"
                          IsVisible="{Binding IsBusy}" />
-            <ItemsControl Items="{Binding Lessons}">
-                <ItemsControl.ItemTemplate>
+            <ListBox Items="{Binding Lessons}">
+                <ListBox.ItemTemplate>
                     <DataTemplate>
-                        <TextBlock Text="{Binding Title}"></TextBlock>
+                        <TextBlock Text="{Binding Title}" />
                     </DataTemplate>
-                </ItemsControl.ItemTemplate>
-            </ItemsControl>
+                </ListBox.ItemTemplate>
+            </ListBox>
         </DockPanel>
     </Panel>
 </Window>

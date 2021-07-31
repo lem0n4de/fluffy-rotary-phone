@@ -23,7 +23,7 @@ namespace KodAdıAfacanlar.ViewModels
         }
         
         public IReactiveCommand FetchLessonsCommand { get; }
-        public ObservableCollection<Lesson> Lessons { get; set; }
+        public ObservableCollection<Lesson> Lessons { get; set; } = new();
 
         private bool _isBusy;
         public bool IsBusy

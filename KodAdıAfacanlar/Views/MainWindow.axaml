@@ -28,26 +28,63 @@
         </ExperimentalAcrylicBorder>
 
         <DockPanel Margin="40">
-            <Button DockPanel.Dock="Bottom"
-                    Command="{Binding FetchLessonsCommand}">
-                <StackPanel Orientation="Horizontal">
-                    <PathIcon Data="{StaticResource arrow_download_regular}" />
-                    <TextBlock Text="Fetch lessons" 
-                               Margin="5 5"
-                               HorizontalAlignment="Center"
-                               VerticalAlignment="Center"/>
-                </StackPanel>
-            </Button>
-            <ProgressBar DockPanel.Dock="Bottom"
-                         IsIndeterminate="True"
-                         IsVisible="{Binding IsBusy}" />
-            <ListBox Items="{Binding Lessons}">
-                <ListBox.ItemTemplate>
+            <Panel DockPanel.Dock="Bottom">
+                <Button DockPanel.Dock="Bottom"
+                        VerticalAlignment="Center"
+                        HorizontalAlignment="Left"
+                        Margin="10"
+                        Command="{Binding FetchLessonsCommand}">
+                    <StackPanel Orientation="Horizontal">
+                        <PathIcon Data="{StaticResource arrow_sync_circle_regular}" />
+                        <TextBlock Text="Fetch lessons"
+                                   Margin="5 5"
+                                   HorizontalAlignment="Center"
+                                   VerticalAlignment="Center" />
+                    </StackPanel>
+                </Button>
+
+                <Button DockPanel.Dock="Bottom"
+                        VerticalAlignment="Center"
+                        HorizontalAlignment="Right"
+                        Margin="10"
+                        Command="{Binding DownloadLessons}">
+                    <StackPanel Orientation="Horizontal">
+                        <PathIcon Data="{StaticResource arrow_download_regular}" />
+                        <TextBlock Text="Download"
+                                   Margin="5 5"
+                                   HorizontalAlignment="Center"
+                                   VerticalAlignment="Center" />
+                    </StackPanel>
+                </Button>
+
+                <ProgressBar DockPanel.Dock="Bottom"
+                             IsIndeterminate="True"
+                             IsVisible="{Binding IsBusy}" />
+
+            </Panel>
+
+
+            <TabControl Items="{Binding Lessons}">
+                <TabControl.ItemTemplate>
                     <DataTemplate>
                         <TextBlock Text="{Binding Title}" />
                     </DataTemplate>
-                </ListBox.ItemTemplate>
-            </ListBox>
+                </TabControl.ItemTemplate>
+                <TabControl.ContentTemplate>
+                    <DataTemplate>
+                        <ListBox Items="{Binding LectureList}">
+                            <ListBox.ItemTemplate>
+                                <DataTemplate>
+                                    <!-- Make checkbox take all width or make is checked by listbox.IsSelected -->
+                                    <CheckBox Content="{Binding Title}"
+                                              IsChecked="{Binding ToDownload}" />
+                                </DataTemplate>
+                            </ListBox.ItemTemplate>
+                        </ListBox>
+                    </DataTemplate>
+                </TabControl.ContentTemplate>
+            </TabControl>
+
         </DockPanel>
     </Panel>
 </Window>

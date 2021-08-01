@@ -24,8 +24,19 @@ namespace KodAdıAfacanlar.ViewModels
 
         private async Task _fetchLessons()
         {
+            // IsBusy = true;
+            // Lessons.Clear();
+            // for (var i = 0; i < 10; i++)
+            // {
+            //     var l = new Lesson($"title {i}", $"javascript code {i}", $"id {i}");
+            //     for (var j = 0; j < 10; j++)
+            //     {
+            //         l.LectureList.Add(new Lecture($"lecture title {j}", $"lecture url {j}") { Teacher = $"lecture teacher {j}"});
+            //     }
+            //     Lessons.Add(l);
+            // }
             IsBusy = true;
-            var l = await scrapingService.Scrape();
+            var l = await Task.Run(() => scrapingService.Scrape());
             if (!l.Any()) return;
             Lessons.AddRange(l);
             IsBusy = false;

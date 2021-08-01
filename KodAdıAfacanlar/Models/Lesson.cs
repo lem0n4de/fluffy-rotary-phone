@@ -5,15 +5,14 @@ namespace KodAdıAfacanlar.Models
 {
     public class Lesson : ReactiveObject
     {
-        private string id;
+        private string htmlId;
         private string title;
-        private string javascriptCode;
         private List<Lecture> lectureList;
 
-        public string Id
+        public string HtmlId
         {
-            get => id;
-            set => this.RaiseAndSetIfChanged(ref id, value);
+            get => htmlId;
+            set => this.RaiseAndSetIfChanged(ref htmlId, value);
         }
 
         public string Title
@@ -22,23 +21,16 @@ namespace KodAdıAfacanlar.Models
             set => this.RaiseAndSetIfChanged(ref title, value);
         }
 
-        public string JavascriptCode
-        {
-            get => javascriptCode;
-            set => this.RaiseAndSetIfChanged(ref javascriptCode, value);
-        }
-
         public List<Lecture> LectureList
         {
             get => lectureList;
             set => this.RaiseAndSetIfChanged(ref lectureList, value);
         }
 
-        public Lesson(string title, string javascriptCode, string id = "")
+        public Lesson(string title, string htmlId)
         {
             Title = title;
-            JavascriptCode = javascriptCode;
-            Id = id;
+            HtmlId = htmlId;
             LectureList = new List<Lecture>();
         }
     }

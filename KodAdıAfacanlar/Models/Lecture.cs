@@ -8,6 +8,10 @@ namespace KodAdıAfacanlar.Models
         private string _title;
         private string _url;
         private string _teacher;
+        private bool _downloaded;
+        private bool _toDownload;
+        private string _downloadPath;
+        private string _javascriptCode;
 
         public string Id
         {
@@ -33,12 +37,39 @@ namespace KodAdıAfacanlar.Models
             set => this.RaiseAndSetIfChanged(ref _teacher, value);
         }
 
-        public Lecture(string title, string url, string teacher = "", string id = "")
+        public bool Downloaded
         {
-            Id = id;
+            get => _downloaded;
+            set => this.RaiseAndSetIfChanged(ref _downloaded, value);
+        }
+
+        public string DownloadPath
+        {
+            get => _downloadPath;
+            set => this.RaiseAndSetIfChanged(ref _downloadPath, value);
+        }
+
+        public bool ToDownload
+        {
+            get => _toDownload;
+            set => this.RaiseAndSetIfChanged(ref _toDownload, value);
+        }
+
+        public string JavascriptCode
+        {
+            get => _javascriptCode;
+            set => this.RaiseAndSetIfChanged(ref _javascriptCode, value);
+        }
+
+        public Lecture(string title, string url)
+        {
             Title = title;
             Url = url;
-            Teacher = teacher;
+            Id = "";
+            Teacher = "";
+            Downloaded = false;
+            DownloadPath = "";
+            JavascriptCode = "";
         }
     }
 }

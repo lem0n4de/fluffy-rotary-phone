@@ -28,41 +28,39 @@
         </ExperimentalAcrylicBorder>
 
         <DockPanel Margin="40">
-            <Panel DockPanel.Dock="Bottom">
-                <Button DockPanel.Dock="Bottom"
-                        VerticalAlignment="Center"
-                        HorizontalAlignment="Left"
-                        Margin="10"
-                        Command="{Binding FetchLessonsCommand}">
-                    <StackPanel Orientation="Horizontal">
-                        <PathIcon Data="{StaticResource arrow_sync_circle_regular}" />
-                        <TextBlock Text="Fetch lessons"
-                                   Margin="5 5"
-                                   HorizontalAlignment="Center"
-                                   VerticalAlignment="Center" />
-                    </StackPanel>
-                </Button>
+            <StackPanel DockPanel.Dock="Bottom">
+                <Panel>
+                    <Button DockPanel.Dock="Bottom"
+                            VerticalAlignment="Center"
+                            HorizontalAlignment="Left"
+                            Margin="10"
+                            Command="{Binding FetchLessonsCommand}">
+                        <StackPanel Orientation="Horizontal">
+                            <PathIcon Data="{StaticResource arrow_sync_circle_regular}" />
+                            <TextBlock Text="Fetch lessons"
+                                       Margin="5 5"
+                                       HorizontalAlignment="Center"
+                                       VerticalAlignment="Center" />
+                        </StackPanel>
+                    </Button>
 
-                <Button DockPanel.Dock="Bottom"
-                        VerticalAlignment="Center"
-                        HorizontalAlignment="Right"
-                        Margin="10"
-                        Command="{Binding DownloadLessons}">
-                    <StackPanel Orientation="Horizontal">
-                        <PathIcon Data="{StaticResource arrow_download_regular}" />
-                        <TextBlock Text="Download"
-                                   Margin="5 5"
-                                   HorizontalAlignment="Center"
-                                   VerticalAlignment="Center" />
-                    </StackPanel>
-                </Button>
+                    <Button VerticalAlignment="Center"
+                            HorizontalAlignment="Right"
+                            Margin="10"
+                            Command="{Binding DownloadLessons}">
+                        <StackPanel Orientation="Horizontal">
+                            <PathIcon Data="{StaticResource arrow_download_regular}" />
+                            <TextBlock Text="Download"
+                                       Margin="5 5"
+                                       HorizontalAlignment="Center"
+                                       VerticalAlignment="Center" />
+                        </StackPanel>
+                    </Button>
+                </Panel>
 
-                <ProgressBar DockPanel.Dock="Bottom"
-                             IsIndeterminate="True"
+                <ProgressBar IsIndeterminate="True"
                              IsVisible="{Binding IsBusy}" />
-
-            </Panel>
-
+            </StackPanel>
 
             <TabControl Items="{Binding Lessons}">
                 <TabControl.ItemTemplate>

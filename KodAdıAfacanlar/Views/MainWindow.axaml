@@ -61,8 +61,9 @@
                 <ProgressBar IsIndeterminate="True"
                              IsVisible="{Binding IsBusy}" />
             </StackPanel>
+            <TextBlock Text="Lütfen bekleyin, bu işlem uzun sürebilir." IsVisible="{Binding IsBusy}" />
 
-            <TabControl Items="{Binding Lessons}">
+            <TabControl Items="{Binding Lessons}" IsVisible="{Binding !IsBusy}">
                 <TabControl.ItemTemplate>
                     <DataTemplate>
                         <TextBlock Text="{Binding Title}" />

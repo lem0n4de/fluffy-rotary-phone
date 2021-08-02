@@ -103,8 +103,7 @@ namespace KodAdıAfacanlar.Services
                     // Click on each one, wait, find element with id="Vid" and take get its src.
                     // Create a Lecture and add it to lesson's LectureList.
                 }
-
-                var actions = new Actions(Driver);
+                
                 foreach (var lesson in l)
                 {
                     Driver.FindElement(By.Id(lesson.HtmlId)).FindElement(By.TagName("span")).Click();

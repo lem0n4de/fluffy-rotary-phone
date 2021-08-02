@@ -20,6 +20,7 @@ namespace KodAdıAfacanlar.ViewModels
         }
         
         private ScrapingService scrapingService { get; } = new();
+        private LessonRepository lessonRepository { get; } = new();
         public IReactiveCommand FetchLessonsCommand { get; }
 
         private async Task _fetchLessons()
@@ -36,8 +37,9 @@ namespace KodAdıAfacanlar.ViewModels
             //     Lessons.Add(l);
             // }
             IsBusy = true;
-            var l = await Task.Run(() => scrapingService.Scrape());
-            if (!l.Any()) return;
+            Lessons.Clear();
+            var l = await lessonRepository.GetLessons();
+            if (l == null || !l.Any()) return;
             Lessons.AddRange(l);
             IsBusy = false;
         }

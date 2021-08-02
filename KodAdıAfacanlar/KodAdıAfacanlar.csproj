@@ -13,6 +13,7 @@
         <PackageReference Include="Avalonia.Desktop" Version="0.10.3" />
         <PackageReference Include="Avalonia.Diagnostics" Version="0.10.3" />
         <PackageReference Include="Avalonia.ReactiveUI" Version="0.10.3" />
+        <PackageReference Include="Newtonsoft.Json" Version="13.0.1" />
         <PackageReference Include="Selenium.Support" Version="4.0.0-beta4" />
         <PackageReference Include="Selenium.WebDriver" Version="4.0.0-beta4" />
         <PackageReference Include="Selenium.WebDriver.ChromeDriver" Version="92.0.4515.10700" />

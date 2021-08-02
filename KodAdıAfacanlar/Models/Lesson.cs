@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using System.IO;
 using ReactiveUI;
 
 namespace KodAdıAfacanlar.Models
@@ -32,6 +33,11 @@ namespace KodAdıAfacanlar.Models
             Title = title;
             HtmlId = htmlId;
             LectureList = new List<Lecture>();
+        }
+
+        public string GetDownloadPath()
+        {
+            return Path.Combine(ConfigManager.config.DownloadDirectory, Title);
         }
     }
 }

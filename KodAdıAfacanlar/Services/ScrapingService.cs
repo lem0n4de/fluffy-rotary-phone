@@ -81,7 +81,8 @@ namespace KodAdıAfacanlar.Services
                 //     break;
                 // }
 
-                // TODO Save SessionId cookie
+                ConfigManager.config.LastKnownSessionId =
+                    Driver.Manage().Cookies.GetCookieNamed("ASP.NET_SessionId").Value;
 
                 // Get Lesson List and build a database
                 wait.Until(d => d.Url == "https://www.tusworld.com.tr/VideoGrupDersleri");
@@ -103,7 +104,7 @@ namespace KodAdıAfacanlar.Services
                     // Click on each one, wait, find element with id="Vid" and take get its src.
                     // Create a Lecture and add it to lesson's LectureList.
                 }
-                
+
                 foreach (var lesson in l)
                 {
                     Driver.FindElement(By.Id(lesson.HtmlId)).FindElement(By.TagName("span")).Click();

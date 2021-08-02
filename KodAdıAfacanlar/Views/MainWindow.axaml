@@ -47,7 +47,7 @@
                     <Button VerticalAlignment="Center"
                             HorizontalAlignment="Right"
                             Margin="10"
-                            Command="{Binding DownloadLessons}">
+                            Command="{Binding DownloadLectures}">
                         <StackPanel Orientation="Horizontal">
                             <PathIcon Data="{StaticResource arrow_download_regular}" />
                             <TextBlock Text="Download"

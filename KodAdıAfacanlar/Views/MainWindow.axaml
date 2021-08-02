@@ -72,11 +72,26 @@
                 <TabControl.ContentTemplate>
                     <DataTemplate>
                         <ListBox Items="{Binding LectureList}">
+                            <ListBox.Styles>
+                                <Style Selector="ListBoxItem">
+                                    <Setter Property="HorizontalContentAlignment" Value="Stretch"></Setter>
+                                </Style>
+                            </ListBox.Styles>
                             <ListBox.ItemTemplate>
                                 <DataTemplate>
                                     <!-- Make checkbox take all width or make is checked by listbox.IsSelected -->
-                                    <CheckBox Content="{Binding Title}"
-                                              IsChecked="{Binding ToDownload}" />
+                                    <DockPanel HorizontalAlignment="Stretch">
+                                        <CheckBox Content="{Binding Title}"
+                                                  DockPanel.Dock="Left"
+                                                  VerticalAlignment="Center"
+                                                  IsChecked="{Binding ToDownload}" />
+                                        <TextBlock DockPanel.Dock="Right"
+                                                   TextAlignment="Right"
+                                                   VerticalAlignment="Center"
+                                                   HorizontalAlignment="Right"
+                                                   Text="{Binding Teacher}" />
+                                                   
+                                    </DockPanel>
                                 </DataTemplate>
                             </ListBox.ItemTemplate>
                         </ListBox>

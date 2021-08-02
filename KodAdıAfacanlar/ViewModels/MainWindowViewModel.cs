@@ -17,35 +17,38 @@ namespace KodAdıAfacanlar.ViewModels
         public MainWindowViewModel()
         {
             FetchLessonsCommand = ReactiveCommand.CreateFromTask(_fetchLessons);
+            Task.Run(_loadLessonsAtStart);
         }
-        
+
         private ScrapingService scrapingService { get; } = new();
         private LessonRepository lessonRepository { get; } = new();
         public IReactiveCommand FetchLessonsCommand { get; }
 
         private async Task _fetchLessons()
         {
-            // IsBusy = true;
-            // Lessons.Clear();
-            // for (var i = 0; i < 10; i++)
-            // {
-            //     var l = new Lesson($"title {i}", $"javascript code {i}", $"id {i}");
-            //     for (var j = 0; j < 10; j++)
-            //     {
-            //         l.LectureList.Add(new Lecture($"lecture title {j}", $"lecture url {j}") { Teacher = $"lecture teacher {j}"});
-            //     }
-            //     Lessons.Add(l);
-            // }
             IsBusy = true;
             Lessons.Clear();
-            var l = await lessonRepository.GetLessons();
+            var l = await lessonRepository.GetLessons(scrape: true);
             if (l == null || !l.Any()) return;
+            Lessons.AddRange(l);
+            IsBusy = false;
+        }
+        private async Task _loadLessonsAtStart()
+        {
+            IsBusy = true;
+            var l = await lessonRepository.GetLessons();
+            if (l == null || !l.Any())
+            {
+                IsBusy = false;
+                return;
+            }
             Lessons.AddRange(l);
             IsBusy = false;
         }
         public ObservableCollection<Lesson> Lessons { get; set; } = new();
 
         private bool _isBusy;
+
         public bool IsBusy
         {
             get => _isBusy;

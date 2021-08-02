@@ -19,7 +19,7 @@ namespace KodAdıAfacanlar.Services
             scrapingService = new ScrapingService();
         }
 
-        public async Task<IEnumerable<Lesson>> GetLessons()
+        public async Task<IEnumerable<Lesson>> GetLessons(bool scrape = false)
         {
             /* Check json file
              * if data in json return that
@@ -27,7 +27,7 @@ namespace KodAdıAfacanlar.Services
              */
             var l = GetLessonsFromDb();
 
-            if (l == null || !l.Any())
+            if ((l == null || !l.Any()) && scrape)
             {
                 var lessonsList = await GetLessonsViaScraping();
                 SaveLessonsToDb(lessonsList);

@@ -1,7 +1,9 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
+using System.Diagnostics;
 using System.Linq;
+using System.Net;
 using System.Reactive;
 using System.Text;
 using System.Threading.Tasks;
@@ -40,7 +42,12 @@ namespace KodAdıAfacanlar.ViewModels
 
         private async Task _downloadLectures()
         {
-            await lessonRepository.DownloadLectures(Lessons);
+            await lessonRepository.DownloadLectures(Lessons, DownloadProgressTracker);
+        }
+
+        private void DownloadProgressTracker(object sender, DownloadProgressChangedEventArgs args)
+        {
+            Debug.WriteLine($"{args.UserState as string} | {args.ProgressPercentage} | {args.TotalBytesToReceive}");
         }
         public IReactiveCommand FetchLessonsCommand { get; }
 

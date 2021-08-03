@@ -114,29 +114,37 @@ namespace KodAdıAfacanlar.Services
             }
         }
 
-        public async Task DownloadLectures(IEnumerable<Lesson> lessons)
+        public async Task DownloadLectures(IEnumerable<Lesson> lessons,
+            DownloadProgressChangedEventHandler? eventHandler)
         {
             var l = lessons.ToList();
             PrepareToDownload(l);
 
-            var client = new WebClient();
-            client.Headers.Add("ASP.NET_SessionId", ConfigManager.config.LastKnownSessionId);
-            client.Headers.Add("authority", "www.tusworld.com.tr");
-            client.Headers.Add("scheme", "https");
-            client.Headers.Add("user-agent",
-                "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/92.0.4515.107 Safari/537.36");
-            client.Headers.Add("accept", "*/*");
-            client.Headers.Add("referer", "https://www.tusworld.com.tr/VideoGrupDersleri");
 
             foreach (var lesson in l)
             {
                 foreach (var lecture in lesson.LectureList.Where(x => x.ToDownload))
                 {
+                    using var client = new WebClient();
+                    client.Headers.Add("ASP.NET_SessionId", ConfigManager.config.LastKnownSessionId);
+                    client.Headers.Add("authority", "www.tusworld.com.tr");
+                    client.Headers.Add("scheme", "https");
+                    client.Headers.Add("user-agent",
+                        "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/92.0.4515.107 Safari/537.36");
+                    client.Headers.Add("accept", "*/*");
+                    client.Headers.Add("referer", "https://www.tusworld.com.tr/VideoGrupDersleri");
                     client.Headers.Set("path", lecture.Url.Split("/").Last());
+                    if (eventHandler != null) client.DownloadProgressChanged += eventHandler;
+                        
                     lecture.DownloadPath = Path.Combine(lesson.GetDownloadPath(), $"{lecture.Title}.mp4");
                     await client.DownloadFileTaskAsync(new Uri(lecture.Url), lecture.DownloadPath);
                 }
             }
+        }
+
+        public async Task DownloadLectures(IEnumerable<Lesson> lessons)
+        {
+            await DownloadLectures(lessons, null);
         }
     }
 }

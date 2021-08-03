@@ -1,8 +1,9 @@
 ﻿using System;
+using System.ComponentModel;
+using System.Diagnostics;
+using System.IO;
 using System.Net;
-using System.Reactive.Linq;
-using System.Reactive.Subjects;
-using Newtonsoft.Json;
+using System.Text.Json.Serialization;
 using ReactiveUI;
 
 namespace KodAdıAfacanlar.Models
@@ -89,6 +90,26 @@ namespace KodAdıAfacanlar.Models
         internal void ProgressChangedEventHandler(object sender, DownloadProgressChangedEventArgs args)
         {
             DownloadProgress = new LectureDownloadProgress(this, args);
+        }
+
+        internal void DownloadFinishedEventHandler(object sender, AsyncCompletedEventArgs eventArgs)
+        {
+            if (eventArgs.Cancelled)
+            {
+                try
+                {
+                    File.Delete(this.DownloadPath);
+                }
+                catch (Exception e)
+                {
+                    // ignored
+                }
+            }
+
+            if (eventArgs.Error != null)
+            {
+                Debug.WriteLine(eventArgs.Error.ToString());
+            }
         }
     }
 }

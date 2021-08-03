@@ -1,4 +1,9 @@
-﻿using ReactiveUI;
+﻿using System;
+using System.Net;
+using System.Reactive.Linq;
+using System.Reactive.Subjects;
+using Newtonsoft.Json;
+using ReactiveUI;
 
 namespace KodAdıAfacanlar.Models
 {
@@ -70,6 +75,20 @@ namespace KodAdıAfacanlar.Models
             Downloaded = false;
             DownloadPath = "";
             JavascriptCode = "";
+        }
+
+        private LectureDownloadProgress _downloadProgress;
+
+        [JsonIgnore]
+        public LectureDownloadProgress DownloadProgress
+        {
+            get => _downloadProgress;
+            set => this.RaiseAndSetIfChanged(ref _downloadProgress, value);
+        }
+
+        internal void ProgressChangedEventHandler(object sender, DownloadProgressChangedEventArgs args)
+        {
+            DownloadProgress = new LectureDownloadProgress(this, args);
         }
     }
 }

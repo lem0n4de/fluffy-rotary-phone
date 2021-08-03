@@ -31,6 +31,8 @@ namespace KodAdıAfacanlar.ViewModels
             }
         }
 
+        public ObservableCollection<Lecture> LectureDownloadingList { get; set; } = new();
+
         private void OnApplicationShutdown(object? sender, ControlledApplicationLifetimeExitEventArgs e)
         {
             lessonRepository.SaveState(Lessons);
@@ -42,7 +44,11 @@ namespace KodAdıAfacanlar.ViewModels
 
         private async Task _downloadLectures()
         {
-            await lessonRepository.DownloadLectures(Lessons, DownloadProgressTracker);
+            foreach (var lesson in Lessons)
+            {
+                LectureDownloadingList.AddRange(lesson.LectureList.Where(x => x.ToDownload));
+            }
+            await lessonRepository.DownloadLectures(Lessons);
         }
 
         private void DownloadProgressTracker(object sender, DownloadProgressChangedEventArgs args)

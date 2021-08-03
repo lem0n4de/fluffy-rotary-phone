@@ -60,8 +60,31 @@
 
                 <ProgressBar IsIndeterminate="True"
                              IsVisible="{Binding IsBusy}" />
+                <Expander Header="Downloads"
+                          ExpandDirection="Down">
+                    <ListBox Items="{Binding LectureDownloadingList}">
+                        <ListBox.Styles>
+                            <Style Selector="ListBoxItem">
+                                <Setter Property="HorizontalContentAlignment" Value="Stretch"></Setter>
+                            </Style>
+                        </ListBox.Styles>
+                        <ListBox.ItemTemplate>
+                            <DataTemplate>
+                                <DockPanel HorizontalAlignment="Stretch">
+                                    <TextBlock Text="{Binding Title}" DockPanel.Dock="Left"/>
+                                    <ProgressBar Value="{Binding DownloadProgress.EventArgs.ProgressPercentage}"
+                                                 ShowProgressText="True"></ProgressBar>
+                                </DockPanel>
+                            </DataTemplate>
+                        </ListBox.ItemTemplate>
+                    </ListBox>
+                </Expander>
             </StackPanel>
-            <TextBlock Text="Lütfen bekleyin, bu işlem uzun sürebilir." IsVisible="{Binding IsBusy}" />
+            <TextBlock Text="Lütfen bekleyin, bu işlem uzun sürebilir."
+                       TextAlignment="Center"
+                       VerticalAlignment="Center"
+                       HorizontalAlignment="Center"
+                       IsVisible="{Binding IsBusy}" />
 
             <TabControl Items="{Binding Lessons}" IsVisible="{Binding !IsBusy}">
                 <TabControl.ItemTemplate>

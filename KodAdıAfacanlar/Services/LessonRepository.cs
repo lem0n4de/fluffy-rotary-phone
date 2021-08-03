@@ -134,7 +134,7 @@ namespace KodAdıAfacanlar.Services
                     client.Headers.Add("accept", "*/*");
                     client.Headers.Add("referer", "https://www.tusworld.com.tr/VideoGrupDersleri");
                     client.Headers.Set("path", lecture.Url.Split("/").Last());
-                    if (eventHandler != null) client.DownloadProgressChanged += eventHandler;
+                    client.DownloadProgressChanged += lecture.ProgressChangedEventHandler;
                         
                     lecture.DownloadPath = Path.Combine(lesson.GetDownloadPath(), $"{lecture.Title}.mp4");
                     await client.DownloadFileTaskAsync(new Uri(lecture.Url), lecture.DownloadPath);

@@ -44,6 +44,7 @@ namespace KodAdıAfacanlar.ViewModels
 
         private async Task _downloadLectures()
         {
+            ShowDownloads = true;
             if (string.IsNullOrEmpty(ConfigManager.config.LastKnownSessionId))
             {
                 await lessonRepository.GetLessons(onlySessionId: true);
@@ -90,6 +91,13 @@ namespace KodAdıAfacanlar.ViewModels
         {
             get => _isBusy;
             set => this.RaiseAndSetIfChanged(ref _isBusy, value);
+        }
+
+        private bool _showDownloads;
+        public bool ShowDownloads
+        {
+            get => _showDownloads;
+            set => this.RaiseAndSetIfChanged(ref _showDownloads, value);
         }
     }
 }

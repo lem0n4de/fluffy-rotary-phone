@@ -61,7 +61,8 @@
                 <ProgressBar IsIndeterminate="True"
                              IsVisible="{Binding IsBusy}" />
                 <Expander Header="Downloads"
-                          ExpandDirection="Down">
+                          ExpandDirection="Down"
+                          IsExpanded="{Binding ShowDownloads}">
                     <ListBox Items="{Binding LectureDownloadingList}">
                         <ListBox.Styles>
                             <Style Selector="ListBoxItem">

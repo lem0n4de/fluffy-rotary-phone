@@ -21,7 +21,7 @@ namespace KodAdıAfacanlar.Services
             scrapingService = new ScrapingService();
         }
 
-        public async Task<IEnumerable<Lesson>> GetLessons(bool forceScrape = false)
+        public async Task<IEnumerable<Lesson>> GetLessons(bool forceScrape = false, bool onlySessionId = false)
         {
             /* Check json file
              * if data in json return that
@@ -32,6 +32,11 @@ namespace KodAdıAfacanlar.Services
                 var lessonsList = await GetLessonsViaScraping();
                 SaveLessonsToDb(lessonsList);
                 return lessonsList;
+            }
+            
+            if (onlySessionId)
+            {
+                await GetSessionId();
             }
 
             var l = GetLessonsFromDb();
@@ -70,6 +75,11 @@ namespace KodAdıAfacanlar.Services
         private async Task<IEnumerable<Lesson>> GetLessonsViaScraping()
         {
             return await Task.Run(() => scrapingService.Scrape());
+        }
+
+        private async Task GetSessionId()
+        {
+            await Task.Run(() => scrapingService.Scrape(onlySessionId: true));
         }
 
         private void SaveLessonsToDb(IEnumerable<Lesson> lessons)

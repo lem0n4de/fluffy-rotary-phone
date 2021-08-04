@@ -15,7 +15,7 @@ namespace KodAdıAfacanlar.Services
 {
     public class ScrapingService
     {
-        private IWebDriver Driver { get; set; }
+        private IWebDriver? Driver { get; set; }
 
         private void ScrapeLectures(Lesson lesson, string teacher = "")
         {
@@ -43,7 +43,7 @@ namespace KodAdıAfacanlar.Services
             }
         }
 
-        public IEnumerable<Lesson> Scrape()
+        public IEnumerable<Lesson> Scrape(bool onlySessionId = false)
         {
             Driver = new ChromeDriver();
             Driver.Manage().Window.Maximize();
@@ -53,6 +53,9 @@ namespace KodAdıAfacanlar.Services
 
                 WebDriverWait wait = new WebDriverWait(Driver, new TimeSpan(0, 0, 5, 0));
                 wait.Until(d => d.Url == "https://www.tusworld.com.tr/Anasayfa" ? true : false);
+                ConfigManager.config.LastKnownSessionId =
+                    Driver.Manage().Cookies.GetCookieNamed("ASP.NET_SessionId").Value;
+                if (onlySessionId == true) return new List<Lesson>();
 
                 wait.Until(d => d.FindElement(By.Id("tclose"))).Click();
                 Driver.FindElement(By.ClassName("VdRnk")).Click();
@@ -80,9 +83,6 @@ namespace KodAdıAfacanlar.Services
                 //         element.Click();
                 //     break;
                 // }
-
-                ConfigManager.config.LastKnownSessionId =
-                    Driver.Manage().Cookies.GetCookieNamed("ASP.NET_SessionId").Value;
 
                 // Get Lesson List and build a database
                 wait.Until(d => d.Url == "https://www.tusworld.com.tr/VideoGrupDersleri");

@@ -4,6 +4,7 @@
         <TargetFramework>net5.0</TargetFramework>
         <Nullable>enable</Nullable>
         <PublishChromeDriver>true</PublishChromeDriver>
+        <AssemblyName>Kod Adı Afacanlar - Tus İndirici</AssemblyName>
     </PropertyGroup>
     <ItemGroup>
         <Folder Include="Models\" />

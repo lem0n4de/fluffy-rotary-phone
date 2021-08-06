@@ -6,8 +6,8 @@
         xmlns:local="clr-namespace:KodAdıAfacanlar.Views"
         mc:Ignorable="d" d:DesignWidth="800" d:DesignHeight="450"
         x:Class="KodAdıAfacanlar.Views.MainWindow"
-        Icon="/Assets/avalonia-logo.ico"
-        Title="KodAdıAfacanlar"
+        Icon="/Assets/favicon.ico"
+        Title="Kod Adı Afacanlar"
 
         ExtendClientAreaToDecorationsHint="True"
         TransparencyLevelHint="AcrylicBlur"

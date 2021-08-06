@@ -136,7 +136,7 @@ namespace KodAdıAfacanlar.Services
                 foreach (var lecture in lesson.LectureList.Where(x => x.ToDownload))
                 {
                     using var client = new WebClient();
-                    client.Headers.Add("ASP.NET_SessionId", ConfigManager.config.LastKnownSessionId);
+                    // client.Headers.Add("ASP.NET_SessionId", ConfigManager.config.LastKnownSessionId);
                     client.Headers.Add("authority", "www.tusworld.com.tr");
                     client.Headers.Add("scheme", "https");
                     client.Headers.Add("user-agent",

@@ -45,10 +45,10 @@ namespace KodAdıAfacanlar.ViewModels
         private async Task _downloadLectures()
         {
             ShowDownloads = true;
-            if (string.IsNullOrEmpty(ConfigManager.config.LastKnownSessionId))
-            {
-                await lessonRepository.GetLessons(onlySessionId: true);
-            }
+            // if (string.IsNullOrEmpty(ConfigManager.config.LastKnownSessionId))
+            // {
+            //     await lessonRepository.GetLessons(onlySessionId: true);
+            // }
             foreach (var lesson in Lessons)
             {
                 LectureDownloadingList.AddRange(lesson.LectureList.Where(x => x.ToDownload));

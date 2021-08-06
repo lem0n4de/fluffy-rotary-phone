@@ -147,7 +147,7 @@ namespace KodAdıAfacanlar.Services
                     client.DownloadProgressChanged += lecture.ProgressChangedEventHandler;
                         
                     lecture.DownloadPath = Path.Combine(lesson.GetDownloadPath(), $"{lecture.Title}.mp4");
-                    await client.DownloadFileTaskAsync(new Uri(lecture.Url), lecture.DownloadPath);
+                    await client.DownloadFileTaskAsync(new Uri(lecture.Url), lecture.GetNormalDownloadPath());
                 }
             }
         }

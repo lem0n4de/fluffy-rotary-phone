@@ -55,6 +55,11 @@ namespace KodAdıAfacanlar.Models
             set => this.RaiseAndSetIfChanged(ref _downloadPath, value);
         }
 
+        public string GetNormalDownloadPath()
+        {
+            return DownloadPath.Replace("/", "-");
+        }
+
         public bool ToDownload
         {
             get => _toDownload;

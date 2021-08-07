@@ -5,6 +5,7 @@
         <Nullable>enable</Nullable>
         <PublishChromeDriver>true</PublishChromeDriver>
         <AssemblyName>Kod Adı Afacanlar - Tus İndirici</AssemblyName>
+        <ApplicationIcon>Assets\favicon.ico</ApplicationIcon>
     </PropertyGroup>
     <ItemGroup>
         <Folder Include="Models\" />

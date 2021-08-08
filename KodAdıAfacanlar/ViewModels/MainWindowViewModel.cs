@@ -51,7 +51,7 @@ namespace KodAdıAfacanlar.ViewModels
             // }
             foreach (var lesson in Lessons)
             {
-                LectureDownloadingList.AddRange(lesson.LectureList.Where(x => x.ToDownload));
+                LectureDownloadingList.AddRange(lesson.LectureSource.Items.Where(x => x.ToDownload));
             }
             await lessonRepository.DownloadLectures(Lessons);
         }

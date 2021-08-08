@@ -4,6 +4,7 @@ using System.Diagnostics;
 using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
+using DynamicData;
 using KodAdıAfacanlar.Models;
 using OpenQA.Selenium;
 using OpenQA.Selenium.Chrome;
@@ -32,7 +33,7 @@ namespace KodAdıAfacanlar.Services
                 {
                     Driver.FindElement(By.Id(lectureElement.LectureId)).Click();
                     var videoSrc = Driver.FindElement(By.Id("Vid")).GetAttribute("src");
-                    lesson.LectureList.Add(!String.IsNullOrEmpty(teacher)
+                    lesson.LectureSource.Add(!String.IsNullOrEmpty(teacher)
                         ? new Lecture(lectureElement.LectureName, videoSrc) {Teacher = teacher}
                         : new Lecture(lectureElement.LectureName, videoSrc));
                 }
@@ -102,7 +103,7 @@ namespace KodAdıAfacanlar.Services
                     // Get each teacher and click them via actions
                     // Get DerslerListesi and FindElements By.TagName a and get their ids.
                     // Click on each one, wait, find element with id="Vid" and take get its src.
-                    // Create a Lecture and add it to lesson's LectureList.
+                    // Create a Lecture and add it to lesson's LectureSource.
                 }
 
                 foreach (var lesson in l)

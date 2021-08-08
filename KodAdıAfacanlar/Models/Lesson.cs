@@ -1,5 +1,7 @@
 ﻿using System.Collections.Generic;
 using System.IO;
+using System.Text.Json.Serialization;
+using DynamicData;
 using ReactiveUI;
 
 namespace KodAdıAfacanlar.Models
@@ -9,6 +11,7 @@ namespace KodAdıAfacanlar.Models
         private string htmlId;
         private string title;
         private List<Lecture> lectureList;
+        private SourceList<Lecture> lectureSource;
 
         public string HtmlId
         {
@@ -22,17 +25,29 @@ namespace KodAdıAfacanlar.Models
             set => this.RaiseAndSetIfChanged(ref title, value);
         }
 
+        [JsonIgnore]
+        public SourceList<Lecture> LectureSource
+        {
+            get => lectureSource;
+            set => this.RaiseAndSetIfChanged(ref lectureSource, value);
+        }
+
         public List<Lecture> LectureList
         {
             get => lectureList;
             set => this.RaiseAndSetIfChanged(ref lectureList, value);
         }
 
+        internal void SyncListAndSource()
+        {
+            LectureSource.AddRange(LectureList);
+        }
+
         public Lesson(string title, string htmlId)
         {
             Title = title;
             HtmlId = htmlId;
-            LectureList = new List<Lecture>();
+            LectureSource = new SourceList<Lecture>();
         }
 
         public string GetDownloadPath()

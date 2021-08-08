@@ -6,6 +6,7 @@ using System.Linq;
 using System.Net;
 using System.Text.Json;
 using System.Threading.Tasks;
+using DynamicData;
 using KodAdıAfacanlar.Models;
 
 namespace KodAdıAfacanlar.Services
@@ -63,6 +64,10 @@ namespace KodAdıAfacanlar.Services
             {
                 var str = File.ReadAllText(LessonsDbPath);
                 var lessonList = JsonSerializer.Deserialize<IEnumerable<Lesson>>(str);
+                foreach (var lesson in lessonList)
+                {
+                    lesson.SyncListAndSource();
+                }
                 return lessonList;
             }
             catch (FileNotFoundException e)
@@ -85,7 +90,7 @@ namespace KodAdıAfacanlar.Services
         private void SaveLessonsToDb(IEnumerable<Lesson> lessons)
         {
             foreach (var lecture in lessons.ToList()
-                .SelectMany(lesson => lesson.LectureList.Where(lecture => lecture.ToDownload == true)))
+                .SelectMany(lesson => lesson.LectureSource.Items.Where(lecture => lecture.ToDownload == true)))
             {
                 lecture.ToDownload = false;
             }
@@ -133,7 +138,7 @@ namespace KodAdıAfacanlar.Services
 
             foreach (var lesson in l)
             {
-                foreach (var lecture in lesson.LectureList.Where(x => x.ToDownload))
+                foreach (var lecture in lesson.LectureSource.Items.Where(x => x.ToDownload))
                 {
                     using var client = new WebClient();
                     // client.Headers.Add("ASP.NET_SessionId", ConfigManager.config.LastKnownSessionId);

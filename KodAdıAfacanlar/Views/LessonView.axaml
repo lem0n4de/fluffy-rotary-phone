@@ -1,0 +1,48 @@
+﻿<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+             xmlns:vm="clr-namespace:KodAdıAfacanlar.ViewModels"
+             mc:Ignorable="d" d:DesignWidth="800" d:DesignHeight="450"
+             x:Class="KodAdıAfacanlar.Views.LessonView">
+    <Design.DataContext>
+        <vm:LessonViewModel />
+    </Design.DataContext>
+
+    <DockPanel>
+        <DockPanel DockPanel.Dock="Top" IsVisible="{Binding !!TeacherList.Count}">
+            <CheckBox IsChecked="{Binding FilterState}" Content="Filter" DockPanel.Dock="Left" />
+            <ComboBox HorizontalAlignment="Stretch"
+                      VerticalAlignment="Center"
+                      Margin="10 10"
+                      IsEnabled="{Binding FilterState}"
+                      Items="{Binding TeacherList}"
+                      PlaceholderText="Select teacher to filter"
+                      SelectedItem="{Binding SelectedTeacher}" />
+        </DockPanel>
+        <ListBox Items="{Binding FilteredLectureList}">
+            <ListBox.Styles>
+                <Style Selector="ListBoxItem">
+                    <Setter Property="HorizontalContentAlignment" Value="Stretch" />
+                </Style>
+            </ListBox.Styles>
+            <ListBox.ItemTemplate>
+                <DataTemplate>
+                    <!-- Make checkbox take all width or make is checked by listbox.IsSelected -->
+                    <DockPanel HorizontalAlignment="Stretch">
+                        <CheckBox Content="{Binding Title}"
+                                  DockPanel.Dock="Left"
+                                  VerticalAlignment="Center"
+                                  IsChecked="{Binding ToDownload}" />
+                        <TextBlock DockPanel.Dock="Right"
+                                   TextAlignment="Right"
+                                   VerticalAlignment="Center"
+                                   HorizontalAlignment="Right"
+                                   Text="{Binding Teacher}" />
+
+                    </DockPanel>
+                </DataTemplate>
+            </ListBox.ItemTemplate>
+        </ListBox>
+    </DockPanel>
+</UserControl>

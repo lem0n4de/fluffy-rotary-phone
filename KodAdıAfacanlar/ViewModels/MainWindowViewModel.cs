@@ -66,9 +66,14 @@ namespace KodAdıAfacanlar.ViewModels
         {
             IsBusy = true;
             Lessons.Clear();
+            Lessons2.Clear();
             var l = await lessonRepository.GetLessons(forceScrape: true);
             if (l == null || !l.Any()) return;
             Lessons.AddRange(l);
+            foreach (var lesson in Lessons)
+            {
+                Lessons2.Add(new LessonViewModel(lesson));
+            }
             IsBusy = false;
         }
         private async Task _loadLessonsAtStart()
@@ -81,9 +86,14 @@ namespace KodAdıAfacanlar.ViewModels
                 return;
             }
             Lessons.AddRange(l);
+            foreach (var lesson in Lessons)
+            {
+                Lessons2.Add(new LessonViewModel(lesson));
+            }
             IsBusy = false;
         }
         public ObservableCollection<Lesson> Lessons { get; set; } = new();
+        public ObservableCollection<LessonViewModel> Lessons2 { get; set; } = new();
 
         private bool _isBusy;
 

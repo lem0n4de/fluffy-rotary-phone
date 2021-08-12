@@ -62,7 +62,7 @@ namespace KodAdıAfacanlar.Services
         {
             try
             {
-                var str = File.ReadAllText(LessonsDbPath);
+                var str = File.ReadAllText(ConfigManager.GetLessonDbPath());
                 var lessonList = JsonSerializer.Deserialize<IEnumerable<Lesson>>(str);
                 foreach (var lesson in lessonList)
                 {
@@ -72,7 +72,7 @@ namespace KodAdıAfacanlar.Services
             }
             catch (FileNotFoundException e)
             {
-                File.Create(LessonsDbPath).Close();
+                File.Create(ConfigManager.GetLessonDbPath()).Close();
                 return null;
             }
         }
@@ -96,7 +96,7 @@ namespace KodAdıAfacanlar.Services
             }
 
             var str = JsonSerializer.Serialize(lessons);
-            File.WriteAllText(LessonsDbPath, str);
+            File.WriteAllText(ConfigManager.GetLessonDbPath(), str);
         }
 
         private void PrepareToDownload(IEnumerable<Lesson> lessons)

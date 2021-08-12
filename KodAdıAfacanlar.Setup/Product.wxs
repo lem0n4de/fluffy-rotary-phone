@@ -1,0 +1,34 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Wix xmlns="http://schemas.microsoft.com/wix/2006/wi">
+	<Product Id="*" Name="Kod Adı Afacanlar" Language="1033" Version="0.1.0.0" Codepage="1254" Manufacturer="Limonata" UpgradeCode="24408221-0680-4d8d-9d3e-79b0d0dd8e94">
+		<Package InstallerVersion="200" Compressed="yes" InstallScope="perMachine" />
+
+		<MajorUpgrade DowngradeErrorMessage="A newer version of [ProductName] is already installed." AllowSameVersionUpgrades="yes"/>
+		<MediaTemplate EmbedCab="yes" />
+
+		<Feature Id="ProductFeature" Title="Kod Adı Afacanlar - Setup" Level="1">
+			<ComponentGroupRef Id="KodAdiAfacanlarProject" />
+		</Feature>
+	</Product>
+
+	<Fragment>
+		<Directory Id="TARGETDIR" Name="SourceDir">
+			<Directory Id="ProgramFilesFolder">
+				<Directory Id="INSTALLFOLDER" Name="Kod Adı Afacanlar" />
+			</Directory>
+		</Directory>
+	</Fragment>
+
+<!--	<Fragment>-->
+<!--		<ComponentGroup Id="ProductComponents" Directory="INSTALLFOLDER">-->
+<!--			<Component Id="ProductComponent">-->
+<!--				<File Id="KodAdiAfacanlarEXE"-->
+<!--					  DiskId="1"-->
+<!--					  Name="Kod Adı Afacanlar.exe"-->
+<!--					  Source="$(var.KodAdıAfacanlar.TargetDir)Kod Adı Afacanlar - Tus İndirici.exe"-->
+<!--					  Vital="yes"-->
+<!--					  KeyPath="yes" />-->
+<!--			</Component>-->
+<!--		</ComponentGroup>-->
+<!--	</Fragment>-->
+</Wix>

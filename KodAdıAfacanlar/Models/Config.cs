@@ -14,10 +14,47 @@ namespace KodAdıAfacanlar.Models
                 Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.DesktopDirectory), "TUS");
 
             public string LastKnownSessionId { get; set; } = "";
-            internal static string ConfigPath { get; } = @"config.json";
+
+            internal static string ConfigFolder { get; } = Path.Combine(
+                Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData), "Kod Adı Afacanlar");
+
+            internal static string ConfigPath { get; } = Path.Combine(ConfigFolder, @"config.json");
+            internal static string LessonDbPath { get; } = Path.Combine(ConfigFolder, @"lessons.json");
         }
 
-        internal static Config config = ReadConfig();
+        internal static Config config { get; set; }
+
+        internal static void OnStart()
+        {
+            Directory.CreateDirectory(Config.ConfigFolder);
+            if (!File.Exists(Config.ConfigPath))
+            {
+                File.Create(Config.ConfigPath).Close();
+            }
+
+            if (!File.Exists(Config.LessonDbPath))
+            {
+                File.Copy(@"lessons.json", Config.LessonDbPath);
+            }
+
+            config = ReadConfig();
+        }
+
+        internal static string GetLessonDbPath()
+        {
+            if (File.Exists(Config.LessonDbPath))
+            {
+                return Config.LessonDbPath;
+            }
+
+            if (File.Exists(@"lessons.json"))
+            {
+                File.Copy(@"lessons.json", Config.LessonDbPath);
+                return Config.LessonDbPath;
+            }
+
+            throw new FileNotFoundException("lessons.json not found.");
+        }
 
         internal static void SaveConfig()
         {
@@ -35,6 +72,12 @@ namespace KodAdıAfacanlar.Models
                 return config;
             }
             catch (FileNotFoundException e)
+            {
+                config = new Config();
+                SaveConfig();
+                return config;
+            }
+            catch (JsonException e)
             {
                 config = new Config();
                 SaveConfig();

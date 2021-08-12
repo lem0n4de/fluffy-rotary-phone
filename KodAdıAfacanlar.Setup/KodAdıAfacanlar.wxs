@@ -1,0 +1,47 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Wix xmlns="http://schemas.microsoft.com/wix/2006/wi">
+    <Fragment>
+        <DirectoryRef Id="INSTALLFOLDER">
+            <Component Id="cmp22F72FF408BD8B721C5EFF8B1EBB1D9E" Guid="{ECDFE665-89AF-4EC0-8E0F-10E3F47199D6}">
+                <File Id="fil5216365AFD8F8DB2A3A44A7C33D432E5" KeyPath="yes" Source="$(var.BasePath)\chromedriver.exe" />
+            </Component>
+            <Component Id="cmp2E5EDA8D72F327AFF452AE2FE00CEA69" Guid="{7A07FBD9-4DCA-4CBA-B4CE-610A6CA0F38C}">
+                <File Id="fil0AC151BF3F546CFD05E806D12E6A5768" KeyPath="yes" Source="$(var.BasePath)\clrcompression.dll" />
+            </Component>
+            <Component Id="cmp170DFF239B610B0ACA2229119DEA678E" Guid="{10194CCA-14CE-401D-A07A-0689A52DF13E}">
+                <File Id="filE90347B97ED4AE7124A57EB903AE43EE" KeyPath="yes" Source="$(var.BasePath)\clrjit.dll" />
+            </Component>
+            <Component Id="cmp1FAC008E6AA14459AD5390EB28F23EFE" Guid="{B0FD47D8-34AB-4D61-AC9E-B73E3E9EC7B6}">
+                <File Id="filDCDD15F7F6F6F4476AD67EA901580BA2" KeyPath="yes" Source="$(var.BasePath)\coreclr.dll" />
+            </Component>
+            <Component Id="cmpAF0A7352F9A15F39674D4E5F4F3D8D08" Guid="{8D7386AD-08BD-4A13-940D-C5DA8A8B8F08}">
+                <File Id="filA2DEB3B3277457046A107D86DE9EC59B" KeyPath="yes" Source="$(var.BasePath)\Kod Adı Afacanlar - Tus İndirici.exe" />
+            </Component>
+            <Component Id="cmp1C3A07743F6A8D6275CBF9F705FEDA1D" Guid="{9E1DE211-3A56-46B9-933A-71B714EE4342}">
+                <File Id="filF9D514D058B0C41E8F50F7C3B3681AED" KeyPath="yes" Source="$(var.BasePath)\lessons.json" />
+            </Component>
+            <Component Id="cmp8812D666387DE314077AFBEE1C1D56ED" Guid="{593D1FB7-9F97-4C6B-8FED-17FEEDDFB8F2}">
+                <File Id="filD2840FE90167C460C1D951618FFCF912" KeyPath="yes" Source="$(var.BasePath)\libHarfBuzzSharp.dll" />
+            </Component>
+            <Component Id="cmp7A6DB975FC72819EA6FE5836E0FAB4EF" Guid="{42D05803-BEF6-4275-8D5C-4C16CE075FF1}">
+                <File Id="filD7B08297A759A21ACA2ED5F664EC727D" KeyPath="yes" Source="$(var.BasePath)\libSkiaSharp.dll" />
+            </Component>
+            <Component Id="cmpE35DDB3C925C83E74C7DAAE6FEA6C156" Guid="{D61C723F-F659-4596-B1F4-F7455D00619C}">
+                <File Id="filEAEAE1CB9E8AC1FF00B05453ABEE2ADF" KeyPath="yes" Source="$(var.BasePath)\mscordaccore.dll" />
+            </Component>
+        </DirectoryRef>
+    </Fragment>
+    <Fragment>
+        <ComponentGroup Id="KodAdiAfacanlarProject">
+            <ComponentRef Id="cmp22F72FF408BD8B721C5EFF8B1EBB1D9E" />
+            <ComponentRef Id="cmp2E5EDA8D72F327AFF452AE2FE00CEA69" />
+            <ComponentRef Id="cmp170DFF239B610B0ACA2229119DEA678E" />
+            <ComponentRef Id="cmp1FAC008E6AA14459AD5390EB28F23EFE" />
+            <ComponentRef Id="cmpAF0A7352F9A15F39674D4E5F4F3D8D08" />
+            <ComponentRef Id="cmp1C3A07743F6A8D6275CBF9F705FEDA1D" />
+            <ComponentRef Id="cmp8812D666387DE314077AFBEE1C1D56ED" />
+            <ComponentRef Id="cmp7A6DB975FC72819EA6FE5836E0FAB4EF" />
+            <ComponentRef Id="cmpE35DDB3C925C83E74C7DAAE6FEA6C156" />
+        </ComponentGroup>
+    </Fragment>
+</Wix>

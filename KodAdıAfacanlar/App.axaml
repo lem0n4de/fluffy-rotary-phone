@@ -8,6 +8,6 @@
 
     <Application.Styles>
         <FluentTheme Mode="Dark"/>
-        <StyleInclude Source="avares://Kod Adı Afacanlar - Tus İndirici/Icons.axaml"></StyleInclude>
+        <StyleInclude Source="avares://Kod Adı Afacanlar/Icons.axaml"></StyleInclude>
     </Application.Styles>
 </Application>

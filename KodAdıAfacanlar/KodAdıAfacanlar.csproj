@@ -4,7 +4,7 @@
         <TargetFramework>net5.0</TargetFramework>
         <Nullable>enable</Nullable>
         <PublishChromeDriver>true</PublishChromeDriver>
-        <AssemblyName>Kod Adı Afacanlar - Tus İndirici</AssemblyName>
+        <AssemblyName>Kod Adı Afacanlar</AssemblyName>
         <ApplicationIcon>Assets\favicon.ico</ApplicationIcon>
     </PropertyGroup>
     <ItemGroup>

@@ -15,13 +15,14 @@
     <DefineConstants>Debug</DefineConstants>
     <Cultures>tr-TR</Cultures>
     <SuppressValidation>False</SuppressValidation>
-    <SuppressIces>ICE30</SuppressIces>
+    <SuppressIces>ICE30;ICE38</SuppressIces>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|x86' ">
     <OutputPath>bin\$(Configuration)\</OutputPath>
     <IntermediateOutputPath>obj\$(Configuration)\</IntermediateOutputPath>
     <Cultures>tr-TR</Cultures>
     <SuppressPdbOutput>yes</SuppressPdbOutput>
+    <SuppressIces>ICE30;ICE38</SuppressIces>
   </PropertyGroup>
   <ItemGroup>
     <Compile Include="KodAdıAfacanlar.wxs" />

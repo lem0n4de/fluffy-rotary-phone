@@ -29,7 +29,7 @@
     <Fragment>
         <ComponentGroup Id="ComponentGroupDesktopShortcut">
             <Component Id="ComponentDesktopShortcut" Guid="bd30dc93-8e54-4c83-a43b-722fbf0fe97a" Directory="DesktopFolder">
-                <Shortcut Id="desktopShortCut" Name="Kod Adı Afacanlar.exe" Directory="DesktopFolder"
+                <Shortcut Id="desktopShortCut" Name="Kod Adı Afacanlar" Directory="DesktopFolder"
                           WorkingDirectory="INSTALLFOLDER" Target="[#fil121D2EB9088821A4D2A1D8EF5E4F2860]"/>
                 <RemoveFolder Id="DesktopFolder" On="uninstall" />
                 <RegistryValue Root="HKCU" Key="Software\$(var.manu)\$(var.projName)" Name="installed" Type="integer"

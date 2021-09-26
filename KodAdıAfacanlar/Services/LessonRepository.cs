@@ -1,10 +1,13 @@
 ﻿using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.IO;
 using System.Linq;
 using System.Net;
+using System.Net.Http;
 using System.Text.Json;
+using System.Threading;
 using System.Threading.Tasks;
 using DynamicData;
 using KodAdıAfacanlar.Models;
@@ -16,10 +19,18 @@ namespace KodAdıAfacanlar.Services
         private ScrapingService scrapingService { get; }
         private string LessonsDbPath = @"lessons.json";
         private string ConfigPath = @"config.json";
+        private HttpClient httpClient;
 
         public LessonRepository()
         {
             scrapingService = new ScrapingService();
+            httpClient = new HttpClient();
+            httpClient.DefaultRequestHeaders.Add("authority", "www.tusworld.com.tr");
+            httpClient.DefaultRequestHeaders.Add("scheme", "https");
+            httpClient.DefaultRequestHeaders.Add("user-agent",
+                "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/92.0.4515.107 Safari/537.36");
+            httpClient.DefaultRequestHeaders.Add("accept", "*/*");
+            httpClient.DefaultRequestHeaders.Add("referer", "https://www.tusworld.com.tr/VideoGrupDersleri");
         }
 
         public async Task<IEnumerable<Lesson>> GetLessons(bool forceScrape = false, bool onlySessionId = false)
@@ -34,7 +45,7 @@ namespace KodAdıAfacanlar.Services
                 SaveLessonsToDb(lessonsList);
                 return lessonsList;
             }
-            
+
             if (onlySessionId)
             {
                 await GetSessionId();
@@ -68,6 +79,7 @@ namespace KodAdıAfacanlar.Services
                 {
                     lesson.SyncListAndSource();
                 }
+
                 return lessonList;
             }
             catch (FileNotFoundException e)
@@ -140,22 +152,52 @@ namespace KodAdıAfacanlar.Services
             {
                 foreach (var lecture in lesson.LectureSource.Items.Where(x => x.ToDownload))
                 {
-                    using var client = new WebClient();
-                    // client.Headers.Add("ASP.NET_SessionId", ConfigManager.config.LastKnownSessionId);
-                    client.Headers.Add("authority", "www.tusworld.com.tr");
-                    client.Headers.Add("scheme", "https");
-                    client.Headers.Add("user-agent",
-                        "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/92.0.4515.107 Safari/537.36");
-                    client.Headers.Add("accept", "*/*");
-                    client.Headers.Add("referer", "https://www.tusworld.com.tr/VideoGrupDersleri");
-                    client.Headers.Set("path", lecture.Url.Split("/").Last());
-                    client.DownloadProgressChanged += lecture.ProgressChangedEventHandler;
-                        
+
                     lecture.DownloadPath = Path.Combine(lesson.GetDownloadPath(), $"{lecture.Title}.mp4");
-                    await client.DownloadFileTaskAsync(new Uri(lecture.Url), lecture.GetNormalDownloadPath());
+                    RaiseLectureDownloadProgressChangedEvent += lecture.ProgressChangedEventHandler;
+
+                    var tokenSource = new CancellationTokenSource();
+                    lecture.TokenSource = tokenSource;
+
+                    using var response =
+                        await httpClient.GetAsync(lecture.Url, HttpCompletionOption.ResponseHeadersRead);
+                    var length = response.Content.Headers.ContentLength;
+                    if (length == null) length = 0L;
+
+                    await using (var source = await response.Content.ReadAsStreamAsync())
+                    {
+                        await using (var streamToWrite = File.Open(lecture.DownloadPath, FileMode.Create))
+                        {
+                            await CopyStream(lecture, source, streamToWrite, int.Parse(length.ToString()!),
+                                tokenSource.Token);
+                        }
+                    }
                 }
             }
         }
+
+        private async Task CopyStream(Lecture lecture, Stream source, Stream destination, int sourceLength,
+            CancellationToken token,
+            int bufferSize = (16 * 1024))
+        {
+            var buffer = new byte[bufferSize];
+            if (sourceLength <= 0) return;
+            var totalBytesCopied = 0;
+            var bytesRead = -1;
+            while (bytesRead != 0)
+            {
+                bytesRead = await source.ReadAsync(buffer, 0, buffer.Length, token);
+                if (bytesRead == 0 || token.IsCancellationRequested) break;
+                await destination.WriteAsync(buffer, 0, buffer.Length, token);
+                totalBytesCopied += bytesRead;
+                var progress =
+                    (int) Math.Round(100.0 * totalBytesCopied / sourceLength); // Dont use int, it can overflow
+                RaiseLectureDownloadProgressChangedEvent(null,
+                    new LectureDownloadProgressChangedEventArgs(lecture, progress));
+            }
+        }
+
+        public event EventHandler<LectureDownloadProgressChangedEventArgs> RaiseLectureDownloadProgressChangedEvent;
 
         public async Task DownloadLectures(IEnumerable<Lesson> lessons)
         {

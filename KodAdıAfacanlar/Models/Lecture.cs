@@ -4,6 +4,9 @@ using System.Diagnostics;
 using System.IO;
 using System.Net;
 using System.Text.Json.Serialization;
+using System.Threading;
+using KodAdıAfacanlar.Services;
+using OpenQA.Selenium.DevTools.V91.Browser;
 using ReactiveUI;
 
 namespace KodAdıAfacanlar.Models
@@ -83,18 +86,26 @@ namespace KodAdıAfacanlar.Models
             JavascriptCode = "";
         }
 
-        private LectureDownloadProgress _downloadProgress;
+        private int _downloadProgress;
 
         [JsonIgnore]
-        public LectureDownloadProgress DownloadProgress
+        public int DownloadProgress
         {
             get => _downloadProgress;
             set => this.RaiseAndSetIfChanged(ref _downloadProgress, value);
         }
 
-        internal void ProgressChangedEventHandler(object sender, DownloadProgressChangedEventArgs args)
+        internal CancellationTokenSource TokenSource { get; set; }
+
+        internal void CancelDownload()
         {
-            DownloadProgress = new LectureDownloadProgress(this, args);
+            TokenSource.Cancel();
+        }
+
+        internal void ProgressChangedEventHandler(object? sender, LectureDownloadProgressChangedEventArgs args)
+        {
+            if (args.Lecture != this) return;
+            DownloadProgress = args.Progress;
         }
 
         internal void DownloadFinishedEventHandler(object sender, AsyncCompletedEventArgs eventArgs)

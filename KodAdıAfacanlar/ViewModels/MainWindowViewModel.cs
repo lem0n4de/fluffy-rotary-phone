@@ -11,19 +11,26 @@ using Avalonia;
 using Avalonia.Controls.ApplicationLifetimes;
 using Avalonia.Interactivity;
 using DynamicData;
+using KodAdıAfacanlar.Core;
 using KodAdıAfacanlar.Models;
 using KodAdıAfacanlar.Services;
+using KodAdıAfacanlar.Services.World;
+using Microsoft.EntityFrameworkCore;
 using ReactiveUI;
 
 namespace KodAdıAfacanlar.ViewModels
 {
     public class MainWindowViewModel : ViewModelBase
     {
+        private Source source;
+
         public MainWindowViewModel()
         {
-            FetchLessonsCommand = ReactiveCommand.CreateFromTask(_fetchLessons);
-            DownloadLectures = ReactiveCommand.CreateFromTask(_downloadLectures);
-            Task.Run(_loadLessonsAtStart);
+            source = new WorldSource();
+
+            FetchLessonsCommand = ReactiveCommand.CreateFromTask(fetchLessons);
+            DownloadLectures = ReactiveCommand.CreateFromTask(downloadLectures);
+            Task.Run(loadLessonsAtStart);
 
             if (Application.Current.ApplicationLifetime is IClassicDesktopStyleApplicationLifetime desktopLifetime)
             {
@@ -35,63 +42,59 @@ namespace KodAdıAfacanlar.ViewModels
 
         private void OnApplicationShutdown(object? sender, ControlledApplicationLifetimeExitEventArgs e)
         {
-            lessonRepository.SaveState(Lessons);
+            Debug.WriteLine($"{Application.Current.Name} is shutdown.");
         }
-        
-        private LessonRepository lessonRepository { get; } = new();
-        
+
         public IReactiveCommand DownloadLectures { get; }
 
-        private async Task _downloadLectures()
+        private async Task downloadLectures()
         {
             ShowDownloads = true;
-            // if (string.IsNullOrEmpty(ConfigManager.config.LastKnownSessionId))
-            // {
-            //     await lessonRepository.GetLessons(onlySessionId: true);
-            // }
             foreach (var lesson in Lessons)
             {
                 LectureDownloadingList.AddRange(lesson.LectureSource.Items.Where(x => x.ToDownload));
             }
-            await lessonRepository.DownloadLectures(Lessons);
+
+            await source.DownloadLectures(LectureDownloadingList);
         }
 
-        private void DownloadProgressTracker(object sender, DownloadProgressChangedEventArgs args)
-        {
-            Debug.WriteLine($"{args.UserState as string} | {args.ProgressPercentage} | {args.TotalBytesToReceive}");
-        }
         public IReactiveCommand FetchLessonsCommand { get; }
 
-        private async Task _fetchLessons()
+        private async Task fetchLessons()
         {
             IsBusy = true;
             Lessons.Clear();
             Lessons2.Clear();
-            var l = await lessonRepository.GetLessons(forceScrape: true);
+            var l = await source.GetLessonsOnlineAsync();
             if (l == null || !l.Any()) return;
             Lessons.AddRange(l);
             foreach (var lesson in Lessons)
             {
                 Lessons2.Add(new LessonViewModel(lesson));
             }
+
             IsBusy = false;
         }
-        private async Task _loadLessonsAtStart()
+
+        private async Task loadLessonsAtStart()
         {
             IsBusy = true;
-            var l = await lessonRepository.GetLessons();
+            var l = await source.GetLessonOfflineAsync();
             if (l == null || !l.Any())
             {
                 IsBusy = false;
                 return;
             }
+
             Lessons.AddRange(l);
             foreach (var lesson in Lessons)
             {
                 Lessons2.Add(new LessonViewModel(lesson));
             }
+
             IsBusy = false;
         }
+
         public ObservableCollection<Lesson> Lessons { get; set; } = new();
         public ObservableCollection<LessonViewModel> Lessons2 { get; set; } = new();
 
@@ -104,6 +107,7 @@ namespace KodAdıAfacanlar.ViewModels
         }
 
         private bool _showDownloads;
+
         public bool ShowDownloads
         {
             get => _showDownloads;

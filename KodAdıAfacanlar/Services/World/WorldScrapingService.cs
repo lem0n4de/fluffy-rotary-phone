@@ -54,8 +54,8 @@ namespace KodAdıAfacanlar.Services
 
                 WebDriverWait wait = new WebDriverWait(Driver, new TimeSpan(0, 0, 5, 0));
                 wait.Until(d => d.Url == "https://www.tusworld.com.tr/Anasayfa" ? true : false);
-                ConfigManager.config.LastKnownSessionId =
-                    Driver.Manage().Cookies.GetCookieNamed("ASP.NET_SessionId").Value;
+                // ConfigManager.config.LastKnownSessionId =
+                //     Driver.Manage().Cookies.GetCookieNamed("ASP.NET_SessionId").Value;
                 if (onlySessionId == true) return new List<Lesson>();
 
                 wait.Until(d => d.FindElement(By.Id("tclose"))).Click();

@@ -1,5 +1,6 @@
 ﻿using System;
 using System.ComponentModel;
+using System.ComponentModel.DataAnnotations.Schema;
 using System.Diagnostics;
 using System.IO;
 using System.Net;
@@ -13,7 +14,7 @@ namespace KodAdıAfacanlar.Models
 {
     public class Lecture : ReactiveObject
     {
-        private string _id;
+        private int? lectureId;
         private string _title;
         private string _url;
         private string _teacher;
@@ -21,11 +22,18 @@ namespace KodAdıAfacanlar.Models
         private bool _toDownload;
         private string _downloadPath;
         private string _javascriptCode;
+        private int lessonId;
 
-        public string Id
+        public int LessonId
         {
-            get => _id;
-            set => this.RaiseAndSetIfChanged(ref _id, value);
+            get => lessonId;
+            set => this.RaiseAndSetIfChanged(ref lessonId, value);
+        }
+
+        public int? LectureId
+        {
+            get => lectureId;
+            set => this.RaiseAndSetIfChanged(ref lectureId, value);
         }
 
         public string Title
@@ -79,7 +87,6 @@ namespace KodAdıAfacanlar.Models
         {
             Title = title;
             Url = url;
-            Id = "";
             Teacher = "";
             Downloaded = false;
             DownloadPath = "";
@@ -89,6 +96,7 @@ namespace KodAdıAfacanlar.Models
         private int _downloadProgress;
 
         [JsonIgnore]
+        [NotMapped]
         public int DownloadProgress
         {
             get => _downloadProgress;

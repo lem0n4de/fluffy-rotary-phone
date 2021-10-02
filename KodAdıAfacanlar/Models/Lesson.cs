@@ -1,4 +1,6 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations.Schema;
 using System.IO;
 using System.Text.Json.Serialization;
 using DynamicData;
@@ -12,6 +14,13 @@ namespace KodAdıAfacanlar.Models
         private string title;
         private List<Lecture> lectureList;
         private SourceList<Lecture> lectureSource;
+        private int lessonId;
+
+        public int LessonId
+        {
+            get => lessonId;
+            set => this.RaiseAndSetIfChanged(ref lessonId, value);
+        }
 
         public string HtmlId
         {
@@ -26,6 +35,7 @@ namespace KodAdıAfacanlar.Models
         }
 
         [JsonIgnore]
+        [NotMapped]
         public SourceList<Lecture> LectureSource
         {
             get => lectureSource;
@@ -52,7 +62,7 @@ namespace KodAdıAfacanlar.Models
 
         public string GetDownloadPath()
         {
-            return Path.Combine(ConfigManager.config.DownloadDirectory, Title);
+            return Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.DesktopDirectory), "TUS", Title);
         }
     }
 }

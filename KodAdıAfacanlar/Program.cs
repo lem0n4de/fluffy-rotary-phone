@@ -13,7 +13,6 @@ namespace KodAdıAfacanlar
         // yet and stuff might break.
         public static void Main(string[] args)
         {
-            ConfigManager.OnStart();
             BuildAvaloniaApp()
                 .StartWithClassicDesktopLifetime(args);
         }

@@ -2,7 +2,7 @@
 
 namespace KodAdıAfacanlar.Migrations
 {
-    public partial class InitialCreate : Migration
+    public partial class WorldDatabaseInitialize : Migration
     {
         protected override void Up(MigrationBuilder migrationBuilder)
         {
@@ -10,51 +10,52 @@ namespace KodAdıAfacanlar.Migrations
                 name: "Lessons",
                 columns: table => new
                 {
-                    Id = table.Column<int>(type: "INTEGER", nullable: false)
+                    LessonId = table.Column<int>(type: "INTEGER", nullable: false)
                         .Annotation("Sqlite:Autoincrement", true),
                     HtmlId = table.Column<string>(type: "TEXT", nullable: false),
                     Title = table.Column<string>(type: "TEXT", nullable: false)
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_Lessons", x => x.Id);
+                    table.PrimaryKey("PK_Lessons", x => x.LessonId);
                 });
 
             migrationBuilder.CreateTable(
-                name: "Lecture",
+                name: "Lectures",
                 columns: table => new
                 {
-                    Id = table.Column<string>(type: "TEXT", nullable: false),
+                    LectureId = table.Column<int>(type: "INTEGER", nullable: false)
+                        .Annotation("Sqlite:Autoincrement", true),
+                    LessonId = table.Column<int>(type: "INTEGER", nullable: false),
                     Title = table.Column<string>(type: "TEXT", nullable: false),
                     Url = table.Column<string>(type: "TEXT", nullable: false),
                     Teacher = table.Column<string>(type: "TEXT", nullable: false),
                     Downloaded = table.Column<bool>(type: "INTEGER", nullable: false),
                     DownloadPath = table.Column<string>(type: "TEXT", nullable: false),
                     ToDownload = table.Column<bool>(type: "INTEGER", nullable: false),
-                    JavascriptCode = table.Column<string>(type: "TEXT", nullable: false),
-                    LessonId = table.Column<int>(type: "INTEGER", nullable: true)
+                    JavascriptCode = table.Column<string>(type: "TEXT", nullable: false)
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_Lecture", x => x.Id);
+                    table.PrimaryKey("PK_Lectures", x => x.LectureId);
                     table.ForeignKey(
-                        name: "FK_Lecture_Lessons_LessonId",
+                        name: "FK_Lectures_Lessons_LessonId",
                         column: x => x.LessonId,
                         principalTable: "Lessons",
-                        principalColumn: "Id",
-                        onDelete: ReferentialAction.Restrict);
+                        principalColumn: "LessonId",
+                        onDelete: ReferentialAction.Cascade);
                 });
 
             migrationBuilder.CreateIndex(
-                name: "IX_Lecture_LessonId",
-                table: "Lecture",
+                name: "IX_Lectures_LessonId",
+                table: "Lectures",
                 column: "LessonId");
         }
 
         protected override void Down(MigrationBuilder migrationBuilder)
         {
             migrationBuilder.DropTable(
-                name: "Lecture");
+                name: "Lectures");
 
             migrationBuilder.DropTable(
                 name: "Lessons");

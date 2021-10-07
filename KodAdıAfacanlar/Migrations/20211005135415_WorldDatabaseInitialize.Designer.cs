@@ -9,8 +9,8 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace KodAdıAfacanlar.Migrations
 {
     [DbContext(typeof(WorldDatabase))]
-    [Migration("20211001190924_AddLessons")]
-    partial class AddLessons
+    [Migration("20211005135415_WorldDatabaseInitialize")]
+    partial class WorldDatabaseInitialize
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
@@ -20,8 +20,9 @@ namespace KodAdıAfacanlar.Migrations
 
             modelBuilder.Entity("KodAdıAfacanlar.Models.Lecture", b =>
                 {
-                    b.Property<string>("Id")
-                        .HasColumnType("TEXT");
+                    b.Property<int?>("LectureId")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("INTEGER");
 
                     b.Property<string>("DownloadPath")
                         .IsRequired()
@@ -34,7 +35,7 @@ namespace KodAdıAfacanlar.Migrations
                         .IsRequired()
                         .HasColumnType("TEXT");
 
-                    b.Property<int?>("LessonId")
+                    b.Property<int>("LessonId")
                         .HasColumnType("INTEGER");
 
                     b.Property<string>("Teacher")
@@ -52,7 +53,7 @@ namespace KodAdıAfacanlar.Migrations
                         .IsRequired()
                         .HasColumnType("TEXT");
 
-                    b.HasKey("Id");
+                    b.HasKey("LectureId");
 
                     b.HasIndex("LessonId");
 
@@ -61,7 +62,7 @@ namespace KodAdıAfacanlar.Migrations
 
             modelBuilder.Entity("KodAdıAfacanlar.Models.Lesson", b =>
                 {
-                    b.Property<int>("Id")
+                    b.Property<int>("LessonId")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("INTEGER");
 
@@ -73,7 +74,7 @@ namespace KodAdıAfacanlar.Migrations
                         .IsRequired()
                         .HasColumnType("TEXT");
 
-                    b.HasKey("Id");
+                    b.HasKey("LessonId");
 
                     b.ToTable("Lessons");
                 });
@@ -82,7 +83,9 @@ namespace KodAdıAfacanlar.Migrations
                 {
                     b.HasOne("KodAdıAfacanlar.Models.Lesson", null)
                         .WithMany("LectureList")
-                        .HasForeignKey("LessonId");
+                        .HasForeignKey("LessonId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
                 });
 
             modelBuilder.Entity("KodAdıAfacanlar.Models.Lesson", b =>

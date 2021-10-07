@@ -23,7 +23,13 @@ namespace KodAdıAfacanlar.Models
         private string _downloadPath;
         private string _javascriptCode;
         private int lessonId;
+        private Lesson lesson;
 
+        public Lesson Lesson
+        {
+            get => lesson;
+            set => this.RaiseAndSetIfChanged(ref lesson, value);
+        }
         public int LessonId
         {
             get => lessonId;

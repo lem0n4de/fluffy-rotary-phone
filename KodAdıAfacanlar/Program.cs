@@ -2,7 +2,9 @@
 using Avalonia;
 using Avalonia.Controls.ApplicationLifetimes;
 using Avalonia.ReactiveUI;
+using KodAdıAfacanlar.Core;
 using KodAdıAfacanlar.Models;
+using Serilog;
 
 namespace KodAdıAfacanlar
 {
@@ -13,8 +15,14 @@ namespace KodAdıAfacanlar
         // yet and stuff might break.
         public static void Main(string[] args)
         {
+            Log.Logger = new LoggerConfiguration()
+                .MinimumLevel.Debug()
+                .WriteTo.Console()
+                .WriteTo.File(Utils.GetLogFileName(), rollingInterval: RollingInterval.Day)
+                .CreateLogger();
             BuildAvaloniaApp()
                 .StartWithClassicDesktopLifetime(args);
+            Log.CloseAndFlush();
         }
 
         // Avalonia configuration, don't remove; also used by visual designer.

@@ -64,5 +64,11 @@ namespace KodAdıAfacanlar.Models
         {
             return Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.DesktopDirectory), "TUS", Title);
         }
+
+        public string GetDownloadPath(string directory)
+        {
+            return Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.DesktopDirectory), "TUS", directory,
+                Title);
+        }
     }
 }

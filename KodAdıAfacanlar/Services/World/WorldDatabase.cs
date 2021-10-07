@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Diagnostics;
 using System.IO;
+using KodAdıAfacanlar.Core;
 using KodAdıAfacanlar.Models;
 using Microsoft.EntityFrameworkCore;
 
@@ -14,7 +15,7 @@ namespace KodAdıAfacanlar.Services.World
 
         public WorldDatabase()
         {
-            DbPath = $"world.db";
+            DbPath = Utils.GetContentFile("world.db");
         }
 
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)

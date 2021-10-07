@@ -6,7 +6,7 @@
         xmlns:local="clr-namespace:KodAdıAfacanlar.Views"
         mc:Ignorable="d" d:DesignWidth="800" d:DesignHeight="450"
         x:Class="KodAdıAfacanlar.Views.MainWindow"
-        Icon="/Assets/favicon.ico"
+        Icon="/Assets/appicon.ico"
         Title="Kod Adı Afacanlar"
 
         ExtendClientAreaToDecorationsHint="True"

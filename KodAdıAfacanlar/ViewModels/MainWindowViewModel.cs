@@ -14,9 +14,11 @@ using DynamicData;
 using KodAdıAfacanlar.Core;
 using KodAdıAfacanlar.Models;
 using KodAdıAfacanlar.Services;
+using KodAdıAfacanlar.Services.Time;
 using KodAdıAfacanlar.Services.World;
 using Microsoft.EntityFrameworkCore;
 using ReactiveUI;
+using Serilog;
 
 namespace KodAdıAfacanlar.ViewModels
 {
@@ -26,8 +28,9 @@ namespace KodAdıAfacanlar.ViewModels
 
         public MainWindowViewModel()
         {
-            source = new WorldSource();
-
+            source = new TimeSource();
+            //source = new WorldSource();
+            
             FetchLessonsCommand = ReactiveCommand.CreateFromTask(fetchLessons);
             DownloadLectures = ReactiveCommand.CreateFromTask(downloadLectures);
             Task.Run(loadLessonsAtStart);
@@ -35,6 +38,7 @@ namespace KodAdıAfacanlar.ViewModels
             if (Application.Current.ApplicationLifetime is IClassicDesktopStyleApplicationLifetime desktopLifetime)
             {
                 desktopLifetime.Exit += OnApplicationShutdown;
+                desktopLifetime.Exit += source.OnClose;
             }
         }
 
@@ -52,8 +56,9 @@ namespace KodAdıAfacanlar.ViewModels
             ShowDownloads = true;
             foreach (var lesson in Lessons)
             {
-                LectureDownloadingList.AddRange(lesson.LectureSource.Items.Where(x => x.ToDownload));
+                LectureDownloadingList.AddRange(lesson.LectureSource.Items.Where(x => x.ToDownload && !x.Downloaded));
             }
+            Log.Debug("Downloading lectures: {@lectures}", LectureDownloadingList);
 
             await source.DownloadLectures(LectureDownloadingList);
         }
@@ -86,7 +91,10 @@ namespace KodAdıAfacanlar.ViewModels
                 return;
             }
 
-            Lessons.AddRange(l);
+            if (source is TimeSource)
+            {
+                Lessons.AddRange(l.Where(lesson => lesson.Title.Contains("Dönem 2022")));
+            } else Lessons.AddRange(l);
             foreach (var lesson in Lessons)
             {
                 Lessons2.Add(new LessonViewModel(lesson));

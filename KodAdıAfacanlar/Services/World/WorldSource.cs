@@ -8,10 +8,12 @@ using System.Net.Http;
 using System.Text.Json;
 using System.Threading;
 using System.Threading.Tasks;
+using Avalonia.Controls.ApplicationLifetimes;
 using EFCore.BulkExtensions;
 using KodAdıAfacanlar.Core;
 using KodAdıAfacanlar.Models;
 using Microsoft.EntityFrameworkCore;
+using Serilog;
 
 namespace KodAdıAfacanlar.Services.World
 {
@@ -42,7 +44,7 @@ namespace KodAdıAfacanlar.Services.World
             List<Lesson> lessonList = new();
             try
             {
-                var str = File.OpenRead(@"lessons.json");
+                var str = File.OpenRead(Utils.GetContentFile("lessons.json"));
                 lessonList = (await JsonSerializer.DeserializeAsync<IEnumerable<Lesson>>(str) ?? Array.Empty<Lesson>())
                     .ToList();
 
@@ -57,6 +59,7 @@ namespace KodAdıAfacanlar.Services.World
                             foreach (var lecture in lesson.LectureList)
                             {
                                 lecture.LessonId = lesson.LessonId;
+                                lecture.Lesson = lesson;
                             }
 
                             l.AddRange(lesson.LectureList);
@@ -87,7 +90,7 @@ namespace KodAdıAfacanlar.Services.World
                 {
                     lesson.SyncListAndSource();
                 }
-
+                Log.Debug("GetLessonsIfflineAsync ended.");
                 return l;
             }
         }
@@ -99,12 +102,13 @@ namespace KodAdıAfacanlar.Services.World
                 foreach (var lecture in lectures)
                 {
                     var lesson = await worldDatabase.Lessons.FirstAsync(x => x.LessonId == lecture.LessonId);
-                    if (!Directory.Exists(lesson.GetDownloadPath()))
+                    var lessonDownloadPath = lesson.GetDownloadPath("World");
+                    if (!Directory.Exists(lessonDownloadPath))
                     {
-                        Directory.CreateDirectory(lesson.GetDownloadPath());
+                        Directory.CreateDirectory(lessonDownloadPath);
                     }
                     
-                    lecture.DownloadPath = Path.Combine(lesson.GetDownloadPath(), $"{lecture.Title}.mp4");
+                    lecture.DownloadPath = Path.Combine(lessonDownloadPath, $"{lecture.Title}.mp4");
                     RaiseLectureDownloadProgressChangedEvent += lecture.ProgressChangedEventHandler;
 
                     var tokenSource = new CancellationTokenSource();
@@ -119,9 +123,10 @@ namespace KodAdıAfacanlar.Services.World
 
                     await using (var source = await response.Content.ReadAsStreamAsync(tokenSource.Token))
                     {
-                        await using (var streamToWrite = File.Open(lecture.DownloadPath, FileMode.Create))
+                        await using (var destination = File.Open(lecture.DownloadPath, FileMode.Create))
                         {
-                            await CopyStream(lecture, source, streamToWrite, int.Parse(length.ToString()!),
+                            // await source.CopyToAsync(destination, tokenSource.Token);
+                            await CopyStream(lecture, source, destination, int.Parse(length.ToString()!),
                                 tokenSource.Token);
                         }
                     }
@@ -130,6 +135,11 @@ namespace KodAdıAfacanlar.Services.World
 
                 await worldDatabase.SaveChangesAsync();
             }
+        }
+
+        public override void OnClose(object? sender, ControlledApplicationLifetimeExitEventArgs e)
+        {
+            Log.Debug("WorldSource.OnClose");
         }
     }
 }

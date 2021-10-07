@@ -210,7 +210,7 @@
         "Name" = "8:Microsoft Visual Studio"
         "ProductName" = "8:Kod Adı Afacanlar"
         "ProductCode" = "8:{1BFCEE50-CA30-4A77-8EF6-CF9443967974}"
-        "PackageCode" = "8:{4FF2D077-2209-4B1A-B1AB-A84809E1BDEB}"
+        "PackageCode" = "8:{2C9F4095-4262-4FD0-A2F6-C929A590559C}"
         "UpgradeCode" = "8:{84186A04-FE5E-452E-853F-858D4FB41978}"
         "AspNetVersion" = "8:4.0.30319.0"
         "RestartWWWService" = "11:FALSE"
@@ -759,7 +759,7 @@
         {
             "{5259A561-127C-4D43-A0A1-72F10C7B3BF8}:_42E690469C5045618E52E0F382AC0EF7"
             {
-            "SourcePath" = "8:..\\KodAdıAfacanlar\\obj\\Release\\net6.0\\win-x64\\apphost.exe"
+            "SourcePath" = "8:..\\KodAdıAfacanlar\\obj\\Release\\net6.0\\osx-x64\\apphost"
             "TargetName" = "8:"
             "Tag" = "8:"
             "Folder" = "8:_CFBDCB1E846F427F8D06EBFFF6EDCD56"

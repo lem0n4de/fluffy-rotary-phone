@@ -10,16 +10,16 @@
 		<RuntimeIdentifiers>win-x64;osx-x64</RuntimeIdentifiers>
 	</PropertyGroup>
 	
-	<!-- OSX related settings for dotnet-bundle: dotnet msbuild -t:BundleApp -p:PublishProfile=FolderProfile.pubxml -->
+	<!-- OSX related settings for dotnet-bundle: dotnet msbuild -t:BundleApp -p:PublishProfile=FolderProfile1.pubxml -->
 	<PropertyGroup>
-        <CFBundleName>KodAdıAfacanlar</CFBundleName> <!-- Also defines .app file name -->
+        <CFBundleName>Kod Adı Afacanlar</CFBundleName> <!-- Also defines .app file name -->
         <CFBundleDisplayName>Kod Adı Afacanlar</CFBundleDisplayName>
         <CFBundleIdentifier>com.lemonade.kodadiafacanlar</CFBundleIdentifier>
         <CFBundleVersion>0.1.2</CFBundleVersion>
 		<CFBundleShortVersionString>0.1.2</CFBundleShortVersionString>
         <CFBundlePackageType>APPL</CFBundlePackageType>
         <CFBundleSignature>????</CFBundleSignature>
-        <CFBundleExecutable>AppName</CFBundleExecutable>
+        <CFBundleExecutable>Kod Adı Afacanlar</CFBundleExecutable>
         <CFBundleIconFile>Assets\appicon.ico</CFBundleIconFile> <!-- Will be copied from output directory -->
         <NSPrincipalClass>NSApplication</NSPrincipalClass>
         <NSHighResolutionCapable>true</NSHighResolutionCapable>

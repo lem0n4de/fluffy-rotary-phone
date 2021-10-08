@@ -30,7 +30,7 @@ jobs:
     - name: Zip
       run: zip -r "Kod Adı Afacanlar.app.zip" $APP_FILE_PATH
     - name: Create Release
-      uses: elgohr/Github-Release-Action@master
+      uses: softprops/action-gh-release@v1
       with:
         files: "Kod Adı Afacanlar.app.zip"
       

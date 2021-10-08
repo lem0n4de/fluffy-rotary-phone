@@ -1,0 +1,36 @@
+name: Mac Build
+
+on:
+  push:
+    tags:
+      - "v*.*.*"
+
+jobs:
+  build:
+    env:
+      APP_FILE_PATH: "'./KodAdıAfacanlar/bin/Release/net6.0/publish/osx/Kod Adı Afacanlar.app'"
+      PUBLISH_PATH:  "./KodAdıAfacanlar/bin/Release/net6.0/publish/osx"
+
+    runs-on: ubuntu-latest
+
+    steps:
+    - uses: actions/checkout@main
+    - name: Setup .NET
+      uses: actions/setup-dotnet@v1
+      with:
+        dotnet-version: 6.0.x
+        include-prerelease: true
+    - name: Restore dependencies
+      run: dotnet restore
+    - name: Build
+      run: dotnet msbuild -t:BundleApp -p:PublishProfile=FolderProfile1.pubxml
+    - name: Make executable
+      run: chmod +x ./KodAdıAfacanlar/bin/Release/net6.0/publish/osx/Kod\ Adı\ Afacanlar.app/Contents/MacOS/Kod\ Adı\ Afacanlar
+    - name: Zip
+      working-directory: ./KodAdıAfacanlar/bin/Release/net6.0/publish/osx/
+      run: zip -r "Kod Adı Afacanlar.app.zip" Kod\ Adı\ Afacanlar.app
+    - name: Create Release
+      uses: softprops/action-gh-release@v1
+      with:
+        files: "./KodAdıAfacanlar/bin/Release/net6.0/publish/osx/Kod Adı Afacanlar.app.zip"
+      

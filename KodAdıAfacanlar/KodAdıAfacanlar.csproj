@@ -8,6 +8,14 @@
 		<DebugType>embedded</DebugType>
 		<ApplicationIcon>Assets\appicon.ico</ApplicationIcon>
 		<RuntimeIdentifiers>win-x64;osx-x64</RuntimeIdentifiers>
+		<GenerateRuntimeConfigFiles>true</GenerateRuntimeConfigFiles>
+	</PropertyGroup>
+
+	<PropertyGroup>
+		<DefineConstants Condition="'$(ISMACOS)'=='true'">$(DefineConstants);MACOS</DefineConstants>
+		<DefineConstants Condition="'$(ISWINDOWS)'=='true'">$(DefineConstants);WINDOWS</DefineConstants>
+		<DefineConstants Condition="'$(ISWORLD)'=='true'">$(DefineConstants);WORLD</DefineConstants>
+		<DefineConstants Condition="'$(ISTIME)'=='true'">$(DefineConstants);TIME</DefineConstants>
 	</PropertyGroup>
 	
 	<!-- OSX related settings for dotnet-bundle: dotnet msbuild -t:BundleApp -p:PublishProfile=FolderProfile1.pubxml -->

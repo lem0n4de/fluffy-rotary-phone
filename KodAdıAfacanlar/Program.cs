@@ -20,6 +20,8 @@ namespace KodAdıAfacanlar
                 .WriteTo.Console()
                 .WriteTo.File(Utils.GetLogFileName(), rollingInterval: RollingInterval.Day)
                 .CreateLogger();
+            Log.Debug("Starting avalonia");
+            Utils.CopyFilesToLocal();
             BuildAvaloniaApp()
                 .StartWithClassicDesktopLifetime(args);
             Log.CloseAndFlush();

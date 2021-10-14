@@ -28,9 +28,13 @@ namespace KodAdıAfacanlar.ViewModels
 
         public MainWindowViewModel()
         {
+#if TIME
             source = new TimeSource();
-            //source = new WorldSource();
-            
+            Log.Debug("Time source initialized.");
+#else
+            source = new WorldSource();
+            Log.Debug("World source initialized.");
+#endif       
             FetchLessonsCommand = ReactiveCommand.CreateFromTask(fetchLessons);
             DownloadLectures = ReactiveCommand.CreateFromTask(downloadLectures);
             Task.Run(loadLessonsAtStart);

@@ -43,6 +43,7 @@ namespace KodAdıAfacanlar.Services.Time
                 var str = await File.ReadAllTextAsync(Utils.GetContentFile("video-links.json"));
                 var timeJson = JsonSerializer.Deserialize<TimeJson>(str);
                 var videos = timeJson!.Videos;
+                Log.Debug("Deserialized video-links.json");
 
                 // Build a lessons list
                 var lessonList = new List<Lesson>();
@@ -93,6 +94,7 @@ namespace KodAdıAfacanlar.Services.Time
             {
                 if (!timeDatabase.Lessons.Any())
                 {
+                    Log.Debug("No items in database, initializing from json.");
                     await InitializeDbFromJson(timeDatabase);
                 }
 
@@ -101,6 +103,8 @@ namespace KodAdıAfacanlar.Services.Time
                 {
                     lesson.SyncListAndSource();
                 }
+
+                Log.Debug("Returning items from database.");
 
                 return l;
             }
@@ -160,6 +164,7 @@ namespace KodAdıAfacanlar.Services.Time
         public override void OnClose(object? sender, ControlledApplicationLifetimeExitEventArgs e)
         {
             torService.Close();
+            Log.Debug("TimeSource.OnClose");
         }
     }
 }

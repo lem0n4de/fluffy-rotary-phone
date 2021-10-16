@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.IO;
 using System.Linq;
 using System.Text;
@@ -34,11 +35,11 @@ namespace KodAdıAfacanlar.Core
         internal static void CopyFilesToLocal()
         {
 #if TIME
-            File.Copy("time.db", GetContentFile("time.db"));
-            File.Copy("video-links.json", GetContentFile("video-links.json"));
+            File.Copy(Path.Combine(Path.GetDirectoryName(Process.GetCurrentProcess().MainModule!.FileName)!, "time.db"), GetContentFile("time.db"));
+            File.Copy(Path.Combine(Path.GetDirectoryName(Process.GetCurrentProcess().MainModule!.FileName)!, "video-links.json"), GetContentFile("video-links.json"));
 #else
-            File.Copy("world.db", GetContentFile("world.db"));
-            File.Copy("lessons.json", GetContentFile("lessons.json"));
+            File.Copy(Path.Combine(Path.GetDirectoryName(Process.GetCurrentProcess().MainModule!.FileName)!, "world.db"), GetContentFile("world.db"));
+            File.Copy(Path.Combine(Path.GetDirectoryName(Process.GetCurrentProcess().MainModule!.FileName)!, "lessons.json"), GetContentFile("lessons.json"));
 #endif
         }
     }

@@ -5,6 +5,7 @@ using System.IO;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using Serilog;
 
 namespace KodAdıAfacanlar.Core
 {
@@ -12,9 +13,8 @@ namespace KodAdıAfacanlar.Core
     {
         internal static string GetLocalApplicationDataFolder()
         {
-            
             var x = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData),
-                    "Kod Adı Afacanlar");
+                "Kod Adı Afacanlar");
             Directory.CreateDirectory(x);
             return x;
         }
@@ -34,13 +34,24 @@ namespace KodAdıAfacanlar.Core
 
         internal static void CopyFilesToLocal()
         {
+            try
+            {
 #if TIME
-            File.Copy(Path.Combine(Path.GetDirectoryName(Process.GetCurrentProcess().MainModule!.FileName)!, "time.db"), GetContentFile("time.db"));
-            File.Copy(Path.Combine(Path.GetDirectoryName(Process.GetCurrentProcess().MainModule!.FileName)!, "video-links.json"), GetContentFile("video-links.json"));
+                File.Copy(Path.Combine(Path.GetDirectoryName(Process.GetCurrentProcess().MainModule!.FileName)!, "time.db"), GetContentFile("time.db"));
+                File.Copy(Path.Combine(Path.GetDirectoryName(Process.GetCurrentProcess().MainModule!.FileName)!, "video-links.json"), GetContentFile("video-links.json"));
 #else
-            File.Copy(Path.Combine(Path.GetDirectoryName(Process.GetCurrentProcess().MainModule!.FileName)!, "world.db"), GetContentFile("world.db"));
-            File.Copy(Path.Combine(Path.GetDirectoryName(Process.GetCurrentProcess().MainModule!.FileName)!, "lessons.json"), GetContentFile("lessons.json"));
+                File.Copy(
+                    Path.Combine(Path.GetDirectoryName(Process.GetCurrentProcess().MainModule!.FileName)!, "world.db"),
+                    GetContentFile("world.db"));
+                File.Copy(
+                    Path.Combine(Path.GetDirectoryName(Process.GetCurrentProcess().MainModule!.FileName)!,
+                        "lessons.json"), GetContentFile("lessons.json"));
 #endif
+            }
+            catch (Exception e)
+            {
+                Log.Error("Error while copying files to local: {e}", e);
+            }
         }
     }
 }

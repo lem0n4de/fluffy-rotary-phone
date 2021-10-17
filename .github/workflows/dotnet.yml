@@ -23,7 +23,7 @@ jobs:
     - name: Restore dependencies
       run: dotnet restore
     - name: Build
-      run: dotnet msbuild -t:BundleApp -p:PublishProfile=FolderProfile1.pubxml
+      run: dotnet msbuild -t:BundleApp -p:PublishProfile=FolderProfile1.pubxml -p:IsTime=true
     - name: Make executable
       run: chmod +x ./KodAdıAfacanlar/bin/Release/net6.0/publish/osx/Kod\ Adı\ Afacanlar.app/Contents/MacOS/Kod\ Adı\ Afacanlar
     - name: Zip

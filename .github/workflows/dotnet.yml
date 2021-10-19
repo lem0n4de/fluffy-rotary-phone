@@ -1,9 +1,6 @@
 name: Mac Build
 
-on:
-  push:
-    tags:
-      - "v*.*.*"
+on: push
 
 jobs:
   build:
@@ -22,8 +19,8 @@ jobs:
         include-prerelease: true
     - name: Restore dependencies
       run: dotnet restore
-    - name: Build
-      run: dotnet msbuild -t:BundleApp -p:PublishProfile=FolderProfile1.pubxml -p:IsTime=true
+    - name: Build for mac
+      run: dotnet build ./KodAdıAfacanlar/ -t:Clean,BundleApp -p:PublishProfile=FolderProfile1.pubxml -p:Configuration=TimeRelease
     - name: Make executable
       run: chmod +x ./KodAdıAfacanlar/bin/Release/net6.0/publish/osx/Kod\ Adı\ Afacanlar.app/Contents/MacOS/Kod\ Adı\ Afacanlar
     - name: Zip
@@ -31,6 +28,7 @@ jobs:
       run: zip -r "Kod Adı Afacanlar.app.zip" Kod\ Adı\ Afacanlar.app
     - name: Create Release
       uses: softprops/action-gh-release@v1
+      if: startsWith(github.ref, 'refs/tags/')
       with:
         files: "./KodAdıAfacanlar/bin/Release/net6.0/publish/osx/Kod Adı Afacanlar.app.zip"
       

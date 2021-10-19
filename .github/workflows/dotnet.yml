@@ -4,10 +4,6 @@ on: push
 
 jobs:
   build:
-    env:
-      APP_FILE_PATH: "'./KodAdıAfacanlar/bin/Release/net6.0/publish/osx/Kod Adı Afacanlar.app'"
-      PUBLISH_PATH:  "./KodAdıAfacanlar/bin/Release/net6.0/publish/osx"
-
     runs-on: ubuntu-latest
 
     steps:
@@ -20,15 +16,15 @@ jobs:
     - name: Restore dependencies
       run: dotnet restore
     - name: Build for mac
-      run: dotnet build ./KodAdıAfacanlar/ -t:Clean,BundleApp -p:PublishProfile=FolderProfile1.pubxml -p:Configuration=TimeRelease
-    - name: Make executable
-      run: chmod +x ./KodAdıAfacanlar/bin/Release/net6.0/publish/osx/Kod\ Adı\ Afacanlar.app/Contents/MacOS/Kod\ Adı\ Afacanlar
+      run: dotnet build ./KodAdıAfacanlar/ -t:Clean,BundleApp -p:PublishProfile=MacTime.pubxml
+    - name: Make executable bin\TimeRelease\net6.0\publish\osx-x64
+      run: chmod +x ./KodAdıAfacanlar/bin/TimeRelease/net6.0/publish/osx-x64/Kod\ Adı\ Afacanlar.app/Contents/MacOS/Kod\ Adı\ Afacanlar
     - name: Zip
-      working-directory: ./KodAdıAfacanlar/bin/Release/net6.0/publish/osx/
+      working-directory: ./KodAdıAfacanlar/bin/TimeRelease/net6.0/publish/osx-x64/
       run: zip -r "Kod Adı Afacanlar.app.zip" Kod\ Adı\ Afacanlar.app
     - name: Create Release
       uses: softprops/action-gh-release@v1
       if: startsWith(github.ref, 'refs/tags/')
       with:
-        files: "./KodAdıAfacanlar/bin/Release/net6.0/publish/osx/Kod Adı Afacanlar.app.zip"
+        files: "./KodAdıAfacanlar/bin/TimeRelease/net6.0/publish/osx-x64/Kod Adı Afacanlar.app.zip"
       

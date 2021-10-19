@@ -26,20 +26,6 @@
         <NSPrincipalClass>NSApplication</NSPrincipalClass>
         <NSHighResolutionCapable>true</NSHighResolutionCapable>
     </PropertyGroup>
-	<PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Time|AnyCPU'">
-	  <DefineConstants>TIME;DEBUG</DefineConstants>
-      <UseAppHost>true</UseAppHost>
-	</PropertyGroup>
-	<PropertyGroup Condition="'$(Configuration)|$(Platform)'=='TimeRelease|AnyCPU'">
-	  <DefineConstants>TIME;RELEASE</DefineConstants>
-      <UseAppHost>true</UseAppHost>
-	</PropertyGroup>
-	<PropertyGroup Condition="'$(Configuration)|$(Platform)'=='WorldDebug|AnyCPU'">
-	  <DefineConstants>WORLD;DEBUG</DefineConstants>
-	</PropertyGroup>
-	<PropertyGroup Condition="'$(Configuration)|$(Platform)'=='WorldRelease|AnyCPU'">
-	  <DefineConstants>WORLD;RELEASE</DefineConstants>
-	</PropertyGroup>
 	
     <ItemGroup>
         <Folder Include="Models\" />

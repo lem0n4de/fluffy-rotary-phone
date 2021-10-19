@@ -1,4 +1,4 @@
-name: Mac Build
+name: Build it ship it
 
 on: push
 
@@ -17,7 +17,7 @@ jobs:
       run: dotnet restore
     - name: Build for mac
       run: dotnet build ./KodAdıAfacanlar/ -t:Clean,BundleApp -p:PublishProfile=MacTime.pubxml
-    - name: Make executable bin\TimeRelease\net6.0\publish\osx-x64
+    - name: Make executable
       run: chmod +x ./KodAdıAfacanlar/bin/TimeRelease/net6.0/publish/osx-x64/Kod\ Adı\ Afacanlar.app/Contents/MacOS/Kod\ Adı\ Afacanlar
     - name: Zip
       working-directory: ./KodAdıAfacanlar/bin/TimeRelease/net6.0/publish/osx-x64/

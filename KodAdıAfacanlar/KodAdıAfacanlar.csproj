@@ -9,13 +9,7 @@
 		<ApplicationIcon>Assets\appicon.ico</ApplicationIcon>
 		<RuntimeIdentifiers>win-x64;osx-x64</RuntimeIdentifiers>
 		<GenerateRuntimeConfigFiles>true</GenerateRuntimeConfigFiles>
-	</PropertyGroup>
-
-	<PropertyGroup>
-		<DefineConstants Condition="'$(ISMACOS)'=='true'">$(DefineConstants);MACOS</DefineConstants>
-		<DefineConstants Condition="'$(ISWINDOWS)'=='true'">$(DefineConstants);WINDOWS</DefineConstants>
-		<DefineConstants Condition="'$(ISWORLD)'=='true'">$(DefineConstants);WORLD</DefineConstants>
-		<DefineConstants Condition="'$(ISTIME)'=='true'">$(DefineConstants);TIME</DefineConstants>
+		<Configurations>Debug;Release;Time;TimeRelease;WorldDebug;WorldRelease</Configurations>
 	</PropertyGroup>
 	
 	<!-- OSX related settings for dotnet-bundle: dotnet msbuild -t:BundleApp -p:PublishProfile=FolderProfile1.pubxml -->
@@ -32,6 +26,20 @@
         <NSPrincipalClass>NSApplication</NSPrincipalClass>
         <NSHighResolutionCapable>true</NSHighResolutionCapable>
     </PropertyGroup>
+	<PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Time|AnyCPU'">
+	  <DefineConstants>TIME;DEBUG</DefineConstants>
+      <UseAppHost>true</UseAppHost>
+	</PropertyGroup>
+	<PropertyGroup Condition="'$(Configuration)|$(Platform)'=='TimeRelease|AnyCPU'">
+	  <DefineConstants>TIME;RELEASE</DefineConstants>
+      <UseAppHost>true</UseAppHost>
+	</PropertyGroup>
+	<PropertyGroup Condition="'$(Configuration)|$(Platform)'=='WorldDebug|AnyCPU'">
+	  <DefineConstants>WORLD;DEBUG</DefineConstants>
+	</PropertyGroup>
+	<PropertyGroup Condition="'$(Configuration)|$(Platform)'=='WorldRelease|AnyCPU'">
+	  <DefineConstants>WORLD;RELEASE</DefineConstants>
+	</PropertyGroup>
 	
     <ItemGroup>
         <Folder Include="Models\" />
@@ -42,6 +50,7 @@
         <PackageReference Include="Avalonia.Desktop" Version="0.10.3" />
         <PackageReference Include="Avalonia.Diagnostics" Version="0.10.3" />
         <PackageReference Include="Avalonia.ReactiveUI" Version="0.10.3" />
+        <PackageReference Include="DiscUtils.Containers" Version="0.16.13" />
         <PackageReference Include="Dotnet.Bundle" Version="0.9.13" />
         <PackageReference Include="EFCore.BulkExtensions" Version="5.4.0" />
         <PackageReference Include="Knapcode.TorSharp" Version="2.8.1" />

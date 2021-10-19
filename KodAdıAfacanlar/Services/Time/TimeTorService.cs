@@ -7,8 +7,10 @@ using System.Net.Http;
 using System.Text.RegularExpressions;
 using System.Threading;
 using System.Threading.Tasks;
+using DiscUtils.Dmg;
 using Knapcode.TorSharp;
 using Serilog;
+using Utils = KodAdıAfacanlar.Core.Utils;
 
 namespace KodAdıAfacanlar.Services.Time
 {
@@ -16,41 +18,48 @@ namespace KodAdıAfacanlar.Services.Time
     {
         private readonly TorSharpSettings settings = new()
         {
-            ZippedToolsDirectory =
-                Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData),
-                    "Kod Adı Afacanlar", "TorZipped"),
-            ExtractedToolsDirectory =
-                Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData),
-                    "Kod Adı Afacanlar", "TorExtracted")
+            ZippedToolsDirectory = Utils.GetContentFile("TorZipped"),
+            ExtractedToolsDirectory = Utils.GetContentFile("TorExtracted")
         };
 
         private Process torProcess;
 
         public async Task SetupToolsAsync()
         {
-            Debug.WriteLine("Setting up tor service");
-            await new TorSharpToolFetcher(settings, new HttpClient()).FetchAsync();
-            TorSharpProxy torSharpProxy = new(settings);
-            await torSharpProxy.ConfigureAsync();
+            Log.Debug("Setting up tor service");
+            if (OperatingSystem.IsMacOS())
+            {
+                Directory.CreateDirectory(Path.Combine(settings.ExtractedToolsDirectory, "Tor"));
+                File.Copy(Path.Combine(Path.GetDirectoryName(Process.GetCurrentProcess().MainModule!.FileName)!, "tor"),
+                    Path.Combine(settings.ExtractedToolsDirectory, "Tor", "tor"));
+            }
+            else
+            {
+                await new TorSharpToolFetcher(settings, new HttpClient()).FetchAsync();
+                TorSharpProxy torSharpProxy = new(settings);
+                await torSharpProxy.ConfigureAsync();
+            }
         }
 
         public async Task StartTorAsync()
         {
-            Log.Information("Starting tor service.");
+            Log.Information("Starting tor service");
             ProcessStartInfo startInfo;
 
             Regex reg = new(@"tor-.+");
-            var torExtractedPath = Directory
-                .GetDirectories(settings.ExtractedToolsDirectory).First(path => reg.IsMatch(path));
             if (OperatingSystem.IsWindows())
             {
+                // For some reason, this line hangs on MacOS
+                var torExtractedPath = Directory
+                    .GetDirectories(settings.ExtractedToolsDirectory).First(path => reg.IsMatch(path));
                 var torPath = $"{torExtractedPath}{Path.DirectorySeparatorChar}Tor{Path.DirectorySeparatorChar}tor.exe";
                 Log.Debug("Tor path is {torPath}", torPath);
                 startInfo = new ProcessStartInfo(torPath);
             }
-            else if (OperatingSystem.IsMacOS() || OperatingSystem.IsLinux())
+            else if (OperatingSystem.IsMacOS())
             {
-                var torPath = $"{torExtractedPath}{Path.DirectorySeparatorChar}Tor{Path.DirectorySeparatorChar}tor";
+                // var torPath = Path.Combine(settings.ExtractedToolsDirectory, "Tor", "tor");
+                var torPath = "/Applications/Tor Browser.app/Contents/MacOS/Tor/tor.real";
                 Log.Debug("Tor path is {torPath}", torPath);
                 startInfo = new ProcessStartInfo(torPath);
             }
@@ -71,6 +80,7 @@ namespace KodAdıAfacanlar.Services.Time
             torProcess.OutputDataReceived += (sender, args) => { Log.Debug("TOR OUTPUT: {data}", args.Data); };
             torProcess.ErrorDataReceived += (sender, args) => { Log.Debug("TOR ERROR: {data}", args.Data); };
 #endif
+            Log.Debug("Tor process started");
             await testProxy();
         }
 

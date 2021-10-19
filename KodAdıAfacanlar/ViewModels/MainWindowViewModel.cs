@@ -62,7 +62,7 @@ namespace KodAdıAfacanlar.ViewModels
             {
                 LectureDownloadingList.AddRange(lesson.LectureSource.Items.Where(x => x.ToDownload && !x.Downloaded));
             }
-            Log.Debug("Downloading lectures: {@lectures}", LectureDownloadingList);
+            // Log.Debug("Downloading lectures: {@lectures}", LectureDownloadingList);
 
             await source.DownloadLectures(LectureDownloadingList);
         }

@@ -112,7 +112,11 @@ namespace KodAdıAfacanlar.Services.Time
 
         public override async Task DownloadLectures(IEnumerable<Lecture> lectures)
         {
-            await torService.SetupToolsAsync();
+            if (!OperatingSystem.IsMacOS())
+            {
+                await torService.SetupToolsAsync();
+            }
+
             await torService.StartTorAsync();
 
             var breezeCookie = await timeScraper.GetBreezeCookie();

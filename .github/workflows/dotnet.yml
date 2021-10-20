@@ -24,7 +24,7 @@ jobs:
       uses: actions/upload-artifact@v2
       with:
         name: windows-world-msi
-        path: KodAdıAfacanlar.Setup.World/Release/KodAdıAfacanlar.Setup.World.msi
+        path: .\KodAdıAfacanlar.Setup.World\Release\KodAdıAfacanlar.Setup.World.msi
   
   build-mac:
     runs-on: ubuntu-latest
@@ -50,7 +50,7 @@ jobs:
       uses: actions/upload-artifact@v2
       with:
         name: mac-world-app
-        path: KodAdıAfacanlar/bin/WorldRelease/net6.0/publish/osx-x64/"Kod Adı Afacanlar - World.app.zip"
+        path: ./KodAdıAfacanlar/bin/WorldRelease/net6.0/publish/osx-x64/Kod\ Adı\ Afacanlar\ -\ World.app.zip
 
     - name: Build time for mac
       run: dotnet build ./KodAdıAfacanlar/ -t:Clean,BundleApp -p:PublishProfile=MacTime.pubxml
@@ -63,7 +63,7 @@ jobs:
       uses: actions/upload-artifact@v2
       with:
         name: mac-time-app
-        path: KodAdıAfacanlar/bin/TimeRelease/net6.0/publish/osx-x64/"Kod Adı Afacanlar - Time.app.zip"
+        path: ./KodAdıAfacanlar/bin/TimeRelease/net6.0/publish/osx-x64/Kod\ Adı\ Afacanlar\ -\ Time.app.zip
     
   release:
     runs-on: ubuntu-latest
@@ -81,14 +81,14 @@ jobs:
       uses: actions/download-artifact@v2
       with:
         name: mac-time-app
-    - name: Display structure of downloaded files
+    - name: LS
       run: ls -R
-      working-directory: path/to/artifact
     - name: Create Release
       uses: softprops/action-gh-release@v1
       if: startsWith(github.ref, 'refs/tags/')
       with:
         files: |
-            "./KodAdıAfacanlar/bin/TimeRelease/net6.0/publish/osx-x64/Kod Adı Afacanlar - Time.app.zip"
-            "./KodAdıAfacanlar/bin/TimeRelease/net6.0/publish/osx-x64/Kod Adı Afacanlar - World.app.zip"
+            Kod\ Adı\ Afacanlar\ -\ Time.app.zip
+            Kod\ Adı\ Afacanlar\ -\ World.app.zip
+            KodAdıAfacanlar.Setup.World.msi
       

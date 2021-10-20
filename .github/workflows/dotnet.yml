@@ -3,7 +3,7 @@ name: Build it ship it
 on: push
 
 jobs:
-  build:
+  build-mac:
     runs-on: ubuntu-latest
 
     steps:
@@ -20,7 +20,7 @@ jobs:
       run: dotnet build ./KodAdıAfacanlar/ -t:Clean,BundleApp -p:PublishProfile=MacWorld.pubxml
     - name: Make world executable
       run: chmod +x ./KodAdıAfacanlar/bin/WorldRelease/net6.0/publish/osx-x64/Kod\ Adı\ Afacanlar.app/Contents/MacOS/Kod\ Adı\ Afacanlar
-    - name: Zip time
+    - name: Zip world
       working-directory: ./KodAdıAfacanlar/bin/WorldRelease/net6.0/publish/osx-x64/
       run: zip -r "Kod Adı Afacanlar - World.app.zip" Kod\ Adı\ Afacanlar.app
 

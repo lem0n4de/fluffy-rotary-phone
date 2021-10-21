@@ -9,6 +9,8 @@ Project("{54435603-DBB4-11D2-8724-00A0C9A8B90C}") = "KodAdıAfacanlar.Setup", "K
 EndProject
 Project("{54435603-DBB4-11D2-8724-00A0C9A8B90C}") = "KodAdıAfacanlar.Setup.World", "KodAdıAfacanlar.Setup.World\KodAdıAfacanlar.Setup.World.vdproj", "{8A1DCA81-5A41-4B2F-A7CE-E15F547F51BB}"
 EndProject
+Project("{54435603-DBB4-11D2-8724-00A0C9A8B90C}") = "KodAdıAfacanlar.Setup.Time", "KodAdıAfacanlar.Setup.Time\KodAdıAfacanlar.Setup.Time.vdproj", "{8C28E064-E3CB-48D0-BC44-172B668C60FD}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -81,6 +83,18 @@ Global
 		{8A1DCA81-5A41-4B2F-A7CE-E15F547F51BB}.WorldDebug|x86.ActiveCfg = Debug
 		{8A1DCA81-5A41-4B2F-A7CE-E15F547F51BB}.WorldRelease|Any CPU.ActiveCfg = Release
 		{8A1DCA81-5A41-4B2F-A7CE-E15F547F51BB}.WorldRelease|x86.ActiveCfg = Release
+		{8C28E064-E3CB-48D0-BC44-172B668C60FD}.Debug|Any CPU.ActiveCfg = Debug
+		{8C28E064-E3CB-48D0-BC44-172B668C60FD}.Debug|x86.ActiveCfg = Debug
+		{8C28E064-E3CB-48D0-BC44-172B668C60FD}.Release|Any CPU.ActiveCfg = Release
+		{8C28E064-E3CB-48D0-BC44-172B668C60FD}.Release|x86.ActiveCfg = Release
+		{8C28E064-E3CB-48D0-BC44-172B668C60FD}.TimeDebug|Any CPU.ActiveCfg = Debug
+		{8C28E064-E3CB-48D0-BC44-172B668C60FD}.TimeDebug|x86.ActiveCfg = Debug
+		{8C28E064-E3CB-48D0-BC44-172B668C60FD}.TimeRelease|Any CPU.ActiveCfg = Release
+		{8C28E064-E3CB-48D0-BC44-172B668C60FD}.TimeRelease|x86.ActiveCfg = Release
+		{8C28E064-E3CB-48D0-BC44-172B668C60FD}.WorldDebug|Any CPU.ActiveCfg = Debug
+		{8C28E064-E3CB-48D0-BC44-172B668C60FD}.WorldDebug|x86.ActiveCfg = Debug
+		{8C28E064-E3CB-48D0-BC44-172B668C60FD}.WorldRelease|Any CPU.ActiveCfg = Release
+		{8C28E064-E3CB-48D0-BC44-172B668C60FD}.WorldRelease|x86.ActiveCfg = Release
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

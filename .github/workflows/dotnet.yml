@@ -8,8 +8,6 @@ jobs:
 
     steps:
     - uses: actions/checkout@main
-      with:
-        ref: complete-ci
     - name: Setup .NET
       uses: actions/setup-dotnet@v1
       with:

@@ -13,6 +13,13 @@ namespace KodAdıAfacanlar.Core
     {
         internal static string GetLocalApplicationDataFolder()
         {
+            if (OperatingSystem.IsMacOS())
+            {
+                var user = Environment.UserName;
+                var y = Path.Combine("/Users", user, ".local", "Kod Adı Afacanlar");
+                Directory.CreateDirectory(y);
+                return y;
+            }
             var x = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData),
                 "Kod Adı Afacanlar");
             Directory.CreateDirectory(x);

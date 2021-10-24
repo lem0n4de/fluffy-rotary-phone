@@ -73,7 +73,11 @@
                         <ListBox.ItemTemplate>
                             <DataTemplate>
                                 <DockPanel HorizontalAlignment="Stretch">
-                                    <TextBlock Text="{Binding Title}" DockPanel.Dock="Left"/>
+                                    <TextBlock Text="{Binding Title}" DockPanel.Dock="Left" VerticalAlignment="Center"/>
+                                    <Button DockPanel.Dock="Right"
+                                            Margin="10"
+                                            Command="{Binding CancelDownload}"
+                                            Content="Cancel" />
                                     <ProgressBar Value="{Binding DownloadProgress}"
                                                  ShowProgressText="True"
                                                  MaxWidth="300"

@@ -123,7 +123,7 @@ namespace KodAdıAfacanlar.Services.Time
 
             using (var timeDatabase = new TimeDatabase())
             {
-                foreach (var lecture in lectures)
+                foreach (var lecture in lectures.ToList())
                 {
                     var lesson = await timeDatabase.Lessons.FirstAsync(x => x.LessonId == lecture.LessonId);
                     var lessonDownloadPath = lesson.GetDownloadPath("Time");
@@ -149,16 +149,23 @@ namespace KodAdıAfacanlar.Services.Time
 
                     lecture.Downloaded = false;
 
-                    await using (var source = await response.Content.ReadAsStreamAsync(tokenSource.Token))
+                    try
                     {
-                        await using (var destination = File.Open(lecture.DownloadPath, FileMode.Create))
+                        await using (var source = await response.Content.ReadAsStreamAsync(tokenSource.Token))
                         {
-                            await CopyStream(lecture, source, destination, int.Parse(length.ToString()!),
-                                tokenSource.Token);
+                            await using (var destination = File.Open(lecture.DownloadPath, FileMode.Create))
+                            {
+                                await CopyStream(lecture, source, destination, int.Parse(length.ToString()!),
+                                    tokenSource.Token);
+                            }
                         }
+                        lecture.Downloaded = true;
+                    }
+                    catch (TaskCanceledException e)
+                    {
+                        // pass
                     }
 
-                    lecture.Downloaded = true;
                 }
 
                 await timeDatabase.SaveChangesAsync();

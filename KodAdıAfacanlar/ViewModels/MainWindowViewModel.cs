@@ -5,12 +5,14 @@ using System.Diagnostics;
 using System.Linq;
 using System.Net;
 using System.Reactive;
+using System.Reactive.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using Avalonia;
 using Avalonia.Controls.ApplicationLifetimes;
 using Avalonia.Interactivity;
 using DynamicData;
+using DynamicData.Binding;
 using KodAdıAfacanlar.Core;
 using KodAdıAfacanlar.Models;
 using KodAdıAfacanlar.Services;
@@ -34,7 +36,7 @@ namespace KodAdıAfacanlar.ViewModels
 #else
             source = new WorldSource();
             Log.Debug("World source initialized.");
-#endif       
+#endif
             FetchLessonsCommand = ReactiveCommand.CreateFromTask(fetchLessons);
             DownloadLectures = ReactiveCommand.CreateFromTask(downloadLectures);
             Task.Run(loadLessonsAtStart);
@@ -61,6 +63,17 @@ namespace KodAdıAfacanlar.ViewModels
             foreach (var lesson in Lessons)
             {
                 LectureDownloadingList.AddRange(lesson.LectureSource.Items.Where(x => x.ToDownload && !x.Downloaded));
+            }
+
+            foreach (var lecture in LectureDownloadingList.ToList())
+            {
+                lecture.WhenAnyValue(x => x.ToDownload).Subscribe(x =>
+                {
+                    if (x == false)
+                    {
+                        LectureDownloadingList.Remove(lecture);
+                    }
+                });
             }
             // Log.Debug("Downloading lectures: {@lectures}", LectureDownloadingList);
 
@@ -98,7 +111,9 @@ namespace KodAdıAfacanlar.ViewModels
             if (source is TimeSource)
             {
                 Lessons.AddRange(l.Where(lesson => lesson.Title.Contains("Dönem 2022")));
-            } else Lessons.AddRange(l);
+            }
+            else Lessons.AddRange(l);
+
             foreach (var lesson in Lessons)
             {
                 Lessons2.Add(new LessonViewModel(lesson));

@@ -90,6 +90,7 @@ namespace KodAdıAfacanlar.Services.World
                 {
                     lesson.SyncListAndSource();
                 }
+
                 Log.Debug("GetLessonsIfflineAsync ended.");
                 return l;
             }
@@ -99,7 +100,7 @@ namespace KodAdıAfacanlar.Services.World
         {
             using (var worldDatabase = new WorldDatabase())
             {
-                foreach (var lecture in lectures)
+                foreach (var lecture in lectures.ToList())
                 {
                     var lesson = await worldDatabase.Lessons.FirstAsync(x => x.LessonId == lecture.LessonId);
                     var lessonDownloadPath = lesson.GetDownloadPath("World");
@@ -107,30 +108,38 @@ namespace KodAdıAfacanlar.Services.World
                     {
                         Directory.CreateDirectory(lessonDownloadPath);
                     }
-                    
+
                     lecture.DownloadPath = Path.Combine(lessonDownloadPath, $"{lecture.Title}.mp4");
                     RaiseLectureDownloadProgressChangedEvent += lecture.ProgressChangedEventHandler;
 
                     var tokenSource = new CancellationTokenSource();
                     lecture.TokenSource = tokenSource;
-                    
+
                     using var response =
-                        await httpClient.GetAsync(lecture.Url, HttpCompletionOption.ResponseHeadersRead, tokenSource.Token);
+                        await httpClient.GetAsync(lecture.Url, HttpCompletionOption.ResponseHeadersRead,
+                            tokenSource.Token);
                     var length = response.Content.Headers.ContentLength;
                     if (length == null) length = 0L;
 
                     lecture.Downloaded = false;
-
-                    await using (var source = await response.Content.ReadAsStreamAsync(tokenSource.Token))
+                    try
                     {
-                        await using (var destination = File.Open(lecture.DownloadPath, FileMode.Create))
+                        await using (var source = await response.Content.ReadAsStreamAsync(tokenSource.Token))
                         {
-                            // await source.CopyToAsync(destination, tokenSource.Token);
-                            await CopyStream(lecture, source, destination, int.Parse(length.ToString()!),
-                                tokenSource.Token);
+                            await using (var destination = File.Open(lecture.DownloadPath, FileMode.Create))
+                            {
+                                // await source.CopyToAsync(destination, tokenSource.Token);
+                                await CopyStream(lecture, source, destination, int.Parse(length.ToString()!),
+                                    tokenSource.Token);
+                            }
                         }
+                        lecture.Downloaded = true;
                     }
-                    lecture.Downloaded = true;
+                    catch (TaskCanceledException e)
+                    {
+                        // pass
+                    }
+
                 }
 
                 await worldDatabase.SaveChangesAsync();

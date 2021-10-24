@@ -100,6 +100,7 @@ namespace KodAdıAfacanlar.Models
             Downloaded = false;
             DownloadPath = "";
             JavascriptCode = "";
+            EnableCancellation = false;
         }
 
         private int _downloadProgress;
@@ -113,6 +114,15 @@ namespace KodAdıAfacanlar.Models
         }
 
         internal CancellationTokenSource TokenSource { get; set; }
+        private bool enableCancellation;
+
+        [JsonIgnore]
+        [NotMapped]
+        public bool EnableCancellation
+        {
+            get => enableCancellation;
+            set => this.RaiseAndSetIfChanged(ref enableCancellation, value);
+        }
 
         public void CancelDownload()
         {
@@ -120,6 +130,7 @@ namespace KodAdıAfacanlar.Models
             Log.Debug("{LectureName} download cancelled", Title);
             ToDownload = false;
             Downloaded = false;
+            EnableCancellation = false;
         }
 
         internal void ProgressChangedEventHandler(object? sender, LectureDownloadProgressChangedEventArgs args)

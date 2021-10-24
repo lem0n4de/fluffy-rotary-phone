@@ -114,6 +114,7 @@ namespace KodAdıAfacanlar.Services.World
 
                     var tokenSource = new CancellationTokenSource();
                     lecture.TokenSource = tokenSource;
+                    lecture.EnableCancellation = true;
 
                     using var response =
                         await httpClient.GetAsync(lecture.Url, HttpCompletionOption.ResponseHeadersRead,

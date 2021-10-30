@@ -27,6 +27,13 @@ namespace KodAdıAfacanlar.ViewModels
     public class MainWindowViewModel : ViewModelBase
     {
         private Source source;
+        private LessonViewModel selectedLesson;
+
+        public LessonViewModel SelectedLesson
+        {
+            get => selectedLesson;
+            set => this.RaiseAndSetIfChanged(ref selectedLesson, value);
+        }
 
         public MainWindowViewModel()
         {

@@ -1,6 +1,6 @@
 <Window xmlns="https://github.com/avaloniaui"
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-        xmlns:vm="using:KodAdıAfacanlar.ViewModels"
+        xmlns:vm="clr-namespace:KodAdıAfacanlar.ViewModels"
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:KodAdıAfacanlar.Views"
@@ -67,13 +67,13 @@
                              MaxHeight="250">
                         <ListBox.Styles>
                             <Style Selector="ListBoxItem">
-                                <Setter Property="HorizontalContentAlignment" Value="Stretch"></Setter>
+                                <Setter Property="HorizontalContentAlignment" Value="Stretch" />
                             </Style>
                         </ListBox.Styles>
                         <ListBox.ItemTemplate>
                             <DataTemplate>
                                 <DockPanel HorizontalAlignment="Stretch">
-                                    <TextBlock Text="{Binding Title}" DockPanel.Dock="Left" VerticalAlignment="Center"/>
+                                    <TextBlock Text="{Binding Title}" DockPanel.Dock="Left" VerticalAlignment="Center" />
                                     <Button DockPanel.Dock="Right"
                                             Margin="10"
                                             Command="{Binding CancelDownload}"
@@ -82,7 +82,7 @@
                                     <ProgressBar Value="{Binding DownloadProgress}"
                                                  ShowProgressText="True"
                                                  MaxWidth="300"
-                                                 DockPanel.Dock="Right" 
+                                                 DockPanel.Dock="Right"
                                                  HorizontalAlignment="Right" />
                                 </DockPanel>
                             </DataTemplate>
@@ -95,14 +95,18 @@
                        VerticalAlignment="Center"
                        HorizontalAlignment="Center"
                        IsVisible="{Binding IsBusy}" />
-
-            <TabControl Items="{Binding Lessons2}" IsVisible="{Binding !IsBusy}">
-                <TabControl.ItemTemplate>
+            <ComboBox DockPanel.Dock="Top"
+                      HorizontalAlignment="Stretch"
+                      Items="{Binding Lessons2}"
+                      SelectedItem="{Binding SelectedLesson}"
+                      IsVisible="{Binding !IsBusy}">
+                <ComboBox.ItemTemplate>
                     <DataTemplate>
                         <TextBlock Text="{Binding Lesson.Title}" />
                     </DataTemplate>
-                </TabControl.ItemTemplate>
-            </TabControl>
+                </ComboBox.ItemTemplate>
+            </ComboBox>
+            <local:LessonView DataContext="{Binding SelectedLesson}" IsVisible="{Binding !$parent.DataContext.IsBusy}"/>
         </DockPanel>
     </Panel>
 </Window>

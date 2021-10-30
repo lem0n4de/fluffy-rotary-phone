@@ -34,7 +34,8 @@
                             VerticalAlignment="Center"
                             HorizontalAlignment="Left"
                             Margin="10"
-                            Command="{Binding FetchLessonsCommand}">
+                            Command="{Binding FetchLessonsCommand}"
+                            IsEnabled="{Binding !IsBusy}">
                         <StackPanel Orientation="Horizontal">
                             <PathIcon Data="{StaticResource arrow_sync_circle_regular}" />
                             <TextBlock Text="Fetch lessons"
@@ -47,7 +48,8 @@
                     <Button VerticalAlignment="Center"
                             HorizontalAlignment="Right"
                             Margin="10"
-                            Command="{Binding DownloadLectures}">
+                            Command="{Binding DownloadLectures}"
+                            IsEnabled="{Binding !IsBusy}">
                         <StackPanel Orientation="Horizontal">
                             <PathIcon Data="{StaticResource arrow_download_regular}" />
                             <TextBlock Text="Download"
@@ -99,6 +101,7 @@
                       HorizontalAlignment="Stretch"
                       Items="{Binding Lessons2}"
                       SelectedItem="{Binding SelectedLesson}"
+                      SelectedIndex="1"
                       IsVisible="{Binding !IsBusy}">
                 <ComboBox.ItemTemplate>
                     <DataTemplate>

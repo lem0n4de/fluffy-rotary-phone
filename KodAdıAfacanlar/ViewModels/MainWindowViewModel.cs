@@ -46,6 +46,15 @@ namespace KodAdıAfacanlar.ViewModels
 #endif
             FetchLessonsCommand = ReactiveCommand.CreateFromTask(fetchLessons);
             DownloadLectures = ReactiveCommand.CreateFromTask(downloadLectures);
+            FetchLessonsCommand.ThrownExceptions.Subscribe( exception =>
+            {
+                Log.Error("FetchLessonsCommand failed: {ErrorMessage}", exception.Message);
+                Task.Run(loadLessonsAtStart);
+            });
+            DownloadLectures.ThrownExceptions.Subscribe(exception =>
+            {
+                Log.Error("DownloadLectures failed: {ErrorMessage}", exception.Message);
+            });
             Task.Run(loadLessonsAtStart);
 
             if (Application.Current.ApplicationLifetime is IClassicDesktopStyleApplicationLifetime desktopLifetime)

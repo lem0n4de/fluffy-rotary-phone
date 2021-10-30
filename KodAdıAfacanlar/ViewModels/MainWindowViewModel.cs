@@ -87,9 +87,22 @@ namespace KodAdıAfacanlar.ViewModels
             IsBusy = true;
             Lessons.Clear();
             Lessons2.Clear();
-            var l = await source.GetLessonsOnlineAsync();
-            if (l == null || !l.Any()) return;
-            Lessons.AddRange(l);
+            var l = (await source.GetLessonsOnlineAsync()).ToList();
+            if (!l.Any()) return;
+            
+            if (source is TimeSource)
+            {
+                var x = l.Where(lesson => (lesson.Title.Contains("Dönem 2022") || lesson.Title.Contains("CANLI YAYIN")) && lesson.LectureList.Count > 0).ToList();
+                foreach (var lesson in x)
+                {
+                    lesson.Title = lesson.Title.Replace("Dönem 2022", "");
+                    lesson.Title = lesson.Title.Replace("(", "");
+                    lesson.Title = lesson.Title.Replace(")", "");
+                }
+                Lessons.AddRange(x);
+            }
+            else Lessons.AddRange(l);
+
             foreach (var lesson in Lessons)
             {
                 Lessons2.Add(new LessonViewModel(lesson));
@@ -101,8 +114,8 @@ namespace KodAdıAfacanlar.ViewModels
         private async Task loadLessonsAtStart()
         {
             IsBusy = true;
-            var l = await source.GetLessonOfflineAsync();
-            if (l == null || !l.Any())
+            var l = (await source.GetLessonOfflineAsync()).ToList();
+            if (!l.Any())
             {
                 IsBusy = false;
                 return;
@@ -110,7 +123,14 @@ namespace KodAdıAfacanlar.ViewModels
 
             if (source is TimeSource)
             {
-                Lessons.AddRange(l.Where(lesson => lesson.Title.Contains("Dönem 2022")));
+                var x = l.Where(lesson => (lesson.Title.Contains("Dönem 2022") || lesson.Title.Contains("CANLI YAYIN")) && lesson.LectureList.Count > 0).ToList();
+                foreach (var lesson in x)
+                {
+                    lesson.Title = lesson.Title.Replace("Dönem 2022", "");
+                    lesson.Title = lesson.Title.Replace("(", "");
+                    lesson.Title = lesson.Title.Replace(")", "");
+                }
+                Lessons.AddRange(x);
             }
             else Lessons.AddRange(l);
 

@@ -8,6 +8,7 @@ using System.Text.Json;
 using System.Threading;
 using System.Threading.Tasks;
 using Avalonia.Controls.ApplicationLifetimes;
+using EFCore.BulkExtensions;
 using KodAdıAfacanlar.Core;
 using KodAdıAfacanlar.Models;
 using Microsoft.EntityFrameworkCore;
@@ -33,20 +34,38 @@ namespace KodAdıAfacanlar.Services.Time
 
         public override async Task<IEnumerable<Lesson>> GetLessonsOnlineAsync()
         {
-            return await timeScraper.Scrape();
+            if (!OperatingSystem.IsMacOS())
+            {
+                await torService.SetupToolsAsync();
+            }
+
+            await torService.StartTorAsync();
+            var videos = await timeScraper.Scrape();
+
+            try
+            {
+                var lessonList = (await ConvertAndSaveTimeLectures(videos)).ToList();
+                foreach (var lesson in lessonList)
+                {
+                    lesson.SyncListAndSource();
+                }
+
+                return lessonList;
+            }
+            catch (Exception e)
+            {
+                Log.Error("Online lesson fetching failed {ErrorMessage}", e.Message);
+                return new List<Lesson>();
+            }
         }
 
-        private async Task InitializeDbFromJson(TimeDatabase timeDatabase)
+        private static async Task<IEnumerable<Lesson>> ConvertAndSaveTimeLectures(IEnumerable<TimeLecture> timeLectures)
         {
             try
             {
-                var str = await File.ReadAllTextAsync(Utils.GetContentFile("video-links.json"));
-                var timeJson = JsonSerializer.Deserialize<TimeJson>(str);
-                var videos = timeJson!.Videos;
-                Log.Debug("Deserialized video-links.json");
-
-                // Build a lessons list
+                await using var timeDatabase = new TimeDatabase();
                 var lessonList = new List<Lesson>();
+                var videos = timeLectures.ToList();
                 foreach (var timeLecture in videos)
                 {
                     if (!lessonList.Exists(x => x.LessonId == timeLecture.LessonId) && timeLecture.LessonName != null &&
@@ -75,11 +94,37 @@ namespace KodAdıAfacanlar.Services.Time
                 // Add all lectures to the lessons they belong
                 foreach (var lesson in lessonList)
                 {
-                    lesson.LectureList.AddRange(lectureList.FindAll(x => x.LessonId == lesson.LessonId));
+                    lesson.LectureList.AddRange(lectureList.FindAll(x => x.LessonId == lesson.LessonId).DistinctBy(x => x.LectureId));
                 }
 
-                await timeDatabase.AddRangeAsync(lessonList);
+                await timeDatabase.BulkInsertOrUpdateAsync(lessonList);
                 await timeDatabase.SaveChangesAsync();
+#if TIME
+                Log.Debug("Saved all {LessonCount} lessons and {LectureCount} to database", lessonList.Count,
+                    lessonList.Sum(x => x.LectureList.Count));
+#endif
+                lessonList = await timeDatabase.Lessons.Include(x => x.LectureList).ToListAsync();
+                return lessonList;
+            }
+            catch (Exception e)
+            {
+                Log.Error("List<TimeLecture> to List<Lesson> conversion failure {ErrorMessage}", e.Message);
+                throw;
+            }
+        }
+
+        private async Task InitializeDbFromJson(TimeDatabase timeDatabase)
+        {
+            try
+            {
+                var str = await File.ReadAllTextAsync(Utils.GetContentFile("video-links.json"));
+                var timeJson = JsonSerializer.Deserialize<TimeJson>(str);
+                var videos = timeJson!.Videos;
+#if TIME
+                Log.Debug("Deserialized video-links.json");
+#endif
+
+                await ConvertAndSaveTimeLectures(videos);
             }
             catch (Exception e)
             {
@@ -160,13 +205,13 @@ namespace KodAdıAfacanlar.Services.Time
                                     tokenSource.Token);
                             }
                         }
+
                         lecture.Downloaded = true;
                     }
                     catch (TaskCanceledException e)
                     {
                         // pass
                     }
-
                 }
 
                 await timeDatabase.SaveChangesAsync();

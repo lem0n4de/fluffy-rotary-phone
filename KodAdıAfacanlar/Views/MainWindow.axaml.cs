@@ -9,7 +9,7 @@ namespace KodAdıAfacanlar.Views
         public MainWindow()
         {
             InitializeComponent();
-#if DEBUG
+#if (TIME || WORLDDEBUG)
             this.AttachDevTools();
 #endif
         }

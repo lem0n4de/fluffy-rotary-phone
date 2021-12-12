@@ -4,11 +4,13 @@ using System.ComponentModel.DataAnnotations.Schema;
 using System.Diagnostics;
 using System.IO;
 using System.Net;
+using System.Reactive;
 using System.Text.Json.Serialization;
 using System.Threading;
 using KodAdıAfacanlar.Services;
 using OpenQA.Selenium.DevTools.V91.Browser;
 using ReactiveUI;
+using Serilog;
 
 namespace KodAdıAfacanlar.Models
 {
@@ -30,6 +32,7 @@ namespace KodAdıAfacanlar.Models
             get => lesson;
             set => this.RaiseAndSetIfChanged(ref lesson, value);
         }
+
         public int LessonId
         {
             get => lessonId;
@@ -97,6 +100,7 @@ namespace KodAdıAfacanlar.Models
             Downloaded = false;
             DownloadPath = "";
             JavascriptCode = "";
+            EnableCancellation = false;
         }
 
         private int _downloadProgress;
@@ -110,10 +114,23 @@ namespace KodAdıAfacanlar.Models
         }
 
         internal CancellationTokenSource TokenSource { get; set; }
+        private bool enableCancellation;
 
-        internal void CancelDownload()
+        [JsonIgnore]
+        [NotMapped]
+        public bool EnableCancellation
+        {
+            get => enableCancellation;
+            set => this.RaiseAndSetIfChanged(ref enableCancellation, value);
+        }
+
+        public void CancelDownload()
         {
             TokenSource.Cancel();
+            Log.Debug("{LectureName} download cancelled", Title);
+            ToDownload = false;
+            Downloaded = false;
+            EnableCancellation = false;
         }
 
         internal void ProgressChangedEventHandler(object? sender, LectureDownloadProgressChangedEventArgs args)

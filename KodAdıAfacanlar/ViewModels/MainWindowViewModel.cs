@@ -5,12 +5,14 @@ using System.Diagnostics;
 using System.Linq;
 using System.Net;
 using System.Reactive;
+using System.Reactive.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using Avalonia;
 using Avalonia.Controls.ApplicationLifetimes;
 using Avalonia.Interactivity;
 using DynamicData;
+using DynamicData.Binding;
 using KodAdıAfacanlar.Core;
 using KodAdıAfacanlar.Models;
 using KodAdıAfacanlar.Services;
@@ -25,6 +27,13 @@ namespace KodAdıAfacanlar.ViewModels
     public class MainWindowViewModel : ViewModelBase
     {
         private Source source;
+        private LessonViewModel selectedLesson;
+
+        public LessonViewModel SelectedLesson
+        {
+            get => selectedLesson;
+            set => this.RaiseAndSetIfChanged(ref selectedLesson, value);
+        }
 
         public MainWindowViewModel()
         {
@@ -34,9 +43,18 @@ namespace KodAdıAfacanlar.ViewModels
 #else
             source = new WorldSource();
             Log.Debug("World source initialized.");
-#endif       
+#endif
             FetchLessonsCommand = ReactiveCommand.CreateFromTask(fetchLessons);
             DownloadLectures = ReactiveCommand.CreateFromTask(downloadLectures);
+            FetchLessonsCommand.ThrownExceptions.Subscribe( exception =>
+            {
+                Log.Error("FetchLessonsCommand failed: {ErrorMessage}", exception.Message);
+                Task.Run(loadLessonsAtStart);
+            });
+            DownloadLectures.ThrownExceptions.Subscribe(exception =>
+            {
+                Log.Error("DownloadLectures failed: {ErrorMessage}", exception.Message);
+            });
             Task.Run(loadLessonsAtStart);
 
             if (Application.Current.ApplicationLifetime is IClassicDesktopStyleApplicationLifetime desktopLifetime)
@@ -62,6 +80,17 @@ namespace KodAdıAfacanlar.ViewModels
             {
                 LectureDownloadingList.AddRange(lesson.LectureSource.Items.Where(x => x.ToDownload && !x.Downloaded));
             }
+
+            foreach (var lecture in LectureDownloadingList.ToList())
+            {
+                lecture.WhenAnyValue(x => x.ToDownload).Subscribe(x =>
+                {
+                    if (x == false)
+                    {
+                        LectureDownloadingList.Remove(lecture);
+                    }
+                });
+            }
             // Log.Debug("Downloading lectures: {@lectures}", LectureDownloadingList);
 
             await source.DownloadLectures(LectureDownloadingList);
@@ -74,9 +103,22 @@ namespace KodAdıAfacanlar.ViewModels
             IsBusy = true;
             Lessons.Clear();
             Lessons2.Clear();
-            var l = await source.GetLessonsOnlineAsync();
-            if (l == null || !l.Any()) return;
-            Lessons.AddRange(l);
+            var l = (await source.GetLessonsOnlineAsync()).ToList();
+            if (!l.Any()) return;
+            
+            if (source is TimeSource)
+            {
+                var x = l.Where(lesson => (lesson.Title.Contains("Dönem 2022") || lesson.Title.Contains("CANLI YAYIN")) && lesson.LectureList.Count > 0).ToList();
+                foreach (var lesson in x)
+                {
+                    lesson.Title = lesson.Title.Replace("Dönem 2022", "");
+                    lesson.Title = lesson.Title.Replace("(", "");
+                    lesson.Title = lesson.Title.Replace(")", "");
+                }
+                Lessons.AddRange(x);
+            }
+            else Lessons.AddRange(l);
+
             foreach (var lesson in Lessons)
             {
                 Lessons2.Add(new LessonViewModel(lesson));
@@ -88,8 +130,8 @@ namespace KodAdıAfacanlar.ViewModels
         private async Task loadLessonsAtStart()
         {
             IsBusy = true;
-            var l = await source.GetLessonOfflineAsync();
-            if (l == null || !l.Any())
+            var l = (await source.GetLessonOfflineAsync()).ToList();
+            if (!l.Any())
             {
                 IsBusy = false;
                 return;
@@ -97,8 +139,17 @@ namespace KodAdıAfacanlar.ViewModels
 
             if (source is TimeSource)
             {
-                Lessons.AddRange(l.Where(lesson => lesson.Title.Contains("Dönem 2022")));
-            } else Lessons.AddRange(l);
+                var x = l.Where(lesson => (lesson.Title.Contains("Dönem 2022") || lesson.Title.Contains("CANLI YAYIN")) && lesson.LectureList.Count > 0).ToList();
+                foreach (var lesson in x)
+                {
+                    lesson.Title = lesson.Title.Replace("Dönem 2022", "");
+                    lesson.Title = lesson.Title.Replace("(", "");
+                    lesson.Title = lesson.Title.Replace(")", "");
+                }
+                Lessons.AddRange(x);
+            }
+            else Lessons.AddRange(l);
+
             foreach (var lesson in Lessons)
             {
                 Lessons2.Add(new LessonViewModel(lesson));

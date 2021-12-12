@@ -15,16 +15,24 @@ namespace KodAdıAfacanlar
         // yet and stuff might break.
         public static void Main(string[] args)
         {
-            Log.Logger = new LoggerConfiguration()
-                .MinimumLevel.Debug()
-                .WriteTo.Console()
-                .WriteTo.File(Utils.GetLogFileName(), rollingInterval: RollingInterval.Day)
-                .CreateLogger();
-            Log.Debug("Starting avalonia");
-            Utils.CopyFilesToLocal();
-            BuildAvaloniaApp()
-                .StartWithClassicDesktopLifetime(args);
-            Log.CloseAndFlush();
+            try
+            {
+
+                Log.Logger = new LoggerConfiguration()
+                    .MinimumLevel.Debug()
+                    .WriteTo.Console()
+                    .WriteTo.File(Utils.GetLogFileName(), rollingInterval: RollingInterval.Day)
+                    .CreateLogger();
+                Log.Debug("Starting avalonia");
+                Utils.CopyFilesToLocal();
+                BuildAvaloniaApp()
+                    .StartWithClassicDesktopLifetime(args);
+                Log.CloseAndFlush();
+            }
+            catch (Exception e)
+            {
+                Console.WriteLine($"Error while starting the app {e.Message}");
+            }
         }
 
         // Avalonia configuration, don't remove; also used by visual designer.

@@ -127,7 +127,7 @@ namespace KodAdıAfacanlar.Services.World
                     {
                         await using (var source = await response.Content.ReadAsStreamAsync(tokenSource.Token))
                         {
-                            await using (var destination = File.Open(lecture.DownloadPath, FileMode.Create))
+                            await using (var destination = File.Open(lecture.GetNormalDownloadPath(), FileMode.Create))
                             {
                                 // await source.CopyToAsync(destination, tokenSource.Token);
                                 await CopyStream(lecture, source, destination, int.Parse(length.ToString()!),

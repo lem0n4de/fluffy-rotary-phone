@@ -1,4 +1,5 @@
-﻿using System;
+﻿using System.Runtime.InteropServices;
+using System;
 using System.ComponentModel;
 using System.ComponentModel.DataAnnotations.Schema;
 using System.Diagnostics;
@@ -77,7 +78,11 @@ namespace KodAdıAfacanlar.Models
 
         public string GetNormalDownloadPath()
         {
-            return DownloadPath.Replace("/", "-");
+            if (OperatingSystem.IsWindows()) {
+                return DownloadPath.Replace("/", "-");
+            } else {
+                return DownloadPath;
+            }
         }
 
         public bool ToDownload
